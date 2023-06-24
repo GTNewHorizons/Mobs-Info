@@ -21,6 +21,7 @@
 package com.kuba6000.mobsinfo.nei;
 
 import com.kuba6000.mobsinfo.Tags;
+import com.kuba6000.mobsinfo.api.LoaderReference;
 
 import codechicken.nei.api.IConfigureNEI;
 
@@ -31,7 +32,8 @@ public class NEI_Config implements IConfigureNEI {
     @Override
     public void loadConfig() {
         isAdded = false;
-        new Mob_Handler();
+        new MobHandler();
+        if (LoaderReference.InfernalMobs) new MobHandlerInfernal();
         isAdded = true;
     }
 

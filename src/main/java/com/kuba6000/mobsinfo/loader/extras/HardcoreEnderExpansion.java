@@ -24,7 +24,8 @@ public class HardcoreEnderExpansion implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo.add("Chance: " + 1.79d + "% (or " + 7.14d + "% when killed using golden sword)");
+            drop.variableChanceInfo
+                .add(Translations.CHANCE.get(1.79d) + " (" + Translations.OR_USING.get(7.14d, "golden sword") + ")");
             drops.add(drop);
         }
     }

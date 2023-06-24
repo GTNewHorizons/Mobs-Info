@@ -30,7 +30,7 @@ public class BloodArsenal implements IExtraLoader {
                     false);
                 drop.variableChance = true;
                 drop.variableChanceInfo.addAll(
-                    Arrays.asList("Chance: 1%", "* Drops only when the mob has weakness potion effect applied"));
+                    Arrays.asList(Translations.CHANCE.get(1d), "* " + Translations.DROPS_ONLY_WITH_WEAKNESS.get()));
                 drops.add(drop);
             } else if (recipe.entity instanceof EntityVillager) {
                 MobDrop drop = new MobDrop(
@@ -43,7 +43,7 @@ public class BloodArsenal implements IExtraLoader {
                     false);
                 drop.variableChance = true;
                 drop.variableChanceInfo.addAll(
-                    Arrays.asList("Chance: 25%", "* Drops only when the mob has weakness potion effect applied"));
+                    Arrays.asList(Translations.CHANCE.get(25d), "* " + Translations.DROPS_ONLY_WITH_WEAKNESS.get()));
                 drops.add(drop);
             }
         }

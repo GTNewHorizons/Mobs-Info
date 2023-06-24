@@ -34,8 +34,8 @@ public class ThaumicBases implements IExtraLoader {
                 drop.variableChance = true;
                 drop.variableChanceInfo.addAll(
                     Arrays.asList(
-                        "Chance: " + ((double) drop.chance / 100d) + "%",
-                        "* Drops only when Vaporising enchantment is applied"));
+                        Translations.CHANCE.get(((double) drop.chance / 100d)),
+                        "* " + Translations.DROPS_ONLY_WITH_ENCHANT.get("Vaporising")));
                 drop.chance = 0;
                 drops.add(drop);
             }

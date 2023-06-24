@@ -29,7 +29,8 @@ public class ThaumicTinkerer implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo.addAll(Arrays.asList("Chance: " + 3.12d + "%", "* Only drops in END dimension"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(Translations.CHANCE.get(3.12d), "* " + Translations.DROPS_ONLY_IN_DIMENSION.get("END")));
             drops.add(drop);
         } else if (recipe.entity instanceof EntityPigZombie) {
             MobDrop drop = new MobDrop(
@@ -44,7 +45,9 @@ public class ThaumicTinkerer implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo.addAll(Arrays.asList("Chance: " + 6.25d + "%", "* Only drops in NETHER dimension"));
+            drop.variableChanceInfo.addAll(
+                Arrays
+                    .asList(Translations.CHANCE.get(6.25d), "* " + Translations.DROPS_ONLY_IN_DIMENSION.get("NETHER")));
             drops.add(drop);
         }
     }

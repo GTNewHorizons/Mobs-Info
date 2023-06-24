@@ -1,6 +1,7 @@
 package com.kuba6000.mobsinfo.mixin.InfernalMobs;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,9 @@ public interface InfernalMobsCoreAccessor {
 
     @Invoker
     boolean callCheckEntityClassForced(EntityLivingBase entity);
+
+    @Invoker
+    void callEnchantRandomly(Random rand, ItemStack itemStack, int itemEnchantability, int modStr);
 
     @Accessor
     ArrayList<ModifierLoader<?>> getModifierLoaders();

@@ -24,9 +24,8 @@ public class Avaritia implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo.addAll(
-                Arrays
-                    .asList("Chance: 100%", "* Drops only killed using Skull Sword and no other skulls were dropped"));
+            drop.variableChanceInfo
+                .addAll(Arrays.asList(Translations.CHANCE.get(100d), "* " + Translations.AVARITIA_SKULL_SWORD.get()));
             drops.add(drop);
         }
     }

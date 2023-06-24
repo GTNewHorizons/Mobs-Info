@@ -15,7 +15,7 @@ public class OpenBlocks implements IExtraLoader {
         if (trophy != null) {
             MobDrop drop = new MobDrop(trophy.getItemStack(), MobDrop.DropType.Normal, 0, null, null, false, false);
             drop.variableChance = true;
-            drop.variableChanceInfo.add("Chance: Small");
+            drop.variableChanceInfo.add(Translations.OPEN_BLOCKS_SMALL_CHANCE.get());
             drops.add(drop);
         }
     }

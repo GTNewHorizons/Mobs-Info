@@ -63,34 +63,26 @@ public class DraconicEvolution implements IExtraLoader {
 
         drop.variableChanceInfo.addAll(
             Arrays.asList(
-                "Variable chance:",
-                "BASED ON REAPER ENCHANT LEVEL - AND WEAPON |",
-                "LEVEL | NONE | I | II | III | IV | V",
-                String.format(
-                    "Any/None | 0%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%",
-                    baseChance * 1,
-                    baseChance * 2,
-                    baseChance * 3,
-                    baseChance * 4,
-                    baseChance * 5),
-                String.format(
-                    "Wyvern Sword/Bow | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%",
+                Translations.VARIABLE_CHANCE.get() + ":",
+                Translations.DRACONIC_EVOLUTION_MOB_SOUL.get(),
+                Translations.DRACONIC_EVOLUTION_MOB_SOUL_1.get(),
+                Translations.DRACONIC_EVOLUTION_MOB_SOUL_2
+                    .get(0d, baseChance * 1, baseChance * 2, baseChance * 3, baseChance * 4, baseChance * 5),
+                Translations.DRACONIC_EVOLUTION_MOB_SOUL_3.get(
                     baseChance * 1,
                     baseChance * 2,
                     baseChance * 3,
                     baseChance * 4,
                     baseChance * 5,
                     baseChance * 6),
-                String.format(
-                    "Draconic Sword/Bow | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%",
+                Translations.DRACONIC_EVOLUTION_MOB_SOUL_4.get(
                     baseChance * 2,
                     baseChance * 3,
                     baseChance * 4,
                     baseChance * 5,
                     baseChance * 6,
                     baseChance * 7),
-                String.format(
-                    "Draconic Staff of Power | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%",
+                Translations.DRACONIC_EVOLUTION_MOB_SOUL_5.get(
                     baseChance * 3,
                     baseChance * 4,
                     baseChance * 5,

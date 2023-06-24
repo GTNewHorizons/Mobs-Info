@@ -26,7 +26,8 @@ public class ElectroMagicTools implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo.addAll(Arrays.asList("Chance: 100%", "* Drops only when Creeper is powered"));
+            drop.variableChanceInfo
+                .addAll(Arrays.asList(Translations.CHANCE.get(100d), "* " + Translations.EMT_CREEPER.get()));
             drops.add(drop);
         }
         if (recipe.entity instanceof EntityTaintChicken) {

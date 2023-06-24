@@ -31,7 +31,8 @@ public class Config {
     private enum Category {
 
         MOB_HANDLER("MobHandler"),
-        DEBUG("Debug");
+        DEBUG("Debug"),
+        COMPATIBILITY("Compatibility");
 
         final String categoryName;
 
@@ -112,6 +113,22 @@ public class Config {
         private static void load(Configuration configuration) {
             Category category = Category.DEBUG;
             showRenderErrors = configuration.get(category.get(), "ShowRenderErrors", false)
+                .getBoolean();
+        }
+    }
+
+    public static class Compatibility {
+
+        public static boolean enableMobHandlerInfernal = true;
+
+        private static void load(Configuration configuration) {
+            Category category = Category.COMPATIBILITY;
+            enableMobHandlerInfernal = configuration
+                .get(
+                    category.get(),
+                    "enableInfernalDrops",
+                    true,
+                    "Enables \"Infernal Drops\" NEI page if Infernal-Mobs mod is loaded.")
                 .getBoolean();
         }
     }

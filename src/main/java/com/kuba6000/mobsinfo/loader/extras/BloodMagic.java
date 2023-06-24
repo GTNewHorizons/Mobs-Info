@@ -26,9 +26,7 @@ public class BloodMagic implements IExtraLoader {
                 false);
             drop.variableChance = true;
             drop.variableChanceInfo.addAll(
-                Arrays.asList(
-                    "Chance: 50%",
-                    "* Drops only when the mob has weakness potion (II or higher) effect applied"));
+                Arrays.asList(Translations.CHANCE.get(50d), "* " + Translations.DROPS_ONLY_WITH_WEAKNESS_2.get()));
             drops.add(drop);
         }
     }

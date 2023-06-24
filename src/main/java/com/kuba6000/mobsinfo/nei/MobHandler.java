@@ -20,7 +20,7 @@
 
 package com.kuba6000.mobsinfo.nei;
 
-import static com.kuba6000.mobsinfo.nei.Mob_Handler.Translations.BOSS;
+import static com.kuba6000.mobsinfo.nei.MobHandler.Translations.BOSS;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
@@ -62,6 +62,7 @@ import com.kuba6000.mobsinfo.api.LoaderReference;
 import com.kuba6000.mobsinfo.api.MobDrop;
 import com.kuba6000.mobsinfo.api.event.MobNEIRegistrationEvent;
 import com.kuba6000.mobsinfo.api.helper.EnderIOHelper;
+import com.kuba6000.mobsinfo.api.helper.TranslationHelper;
 import com.kuba6000.mobsinfo.api.utils.FastRandom;
 import com.kuba6000.mobsinfo.api.utils.MobUtils;
 import com.kuba6000.mobsinfo.api.utils.ModUtils;
@@ -82,7 +83,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.machine.spawner.BlockPoweredSpawner;
 
-public class Mob_Handler extends TemplateRecipeHandler {
+public class MobHandler extends TemplateRecipeHandler {
 
     enum Translations {
 
@@ -115,7 +116,7 @@ public class Mob_Handler extends TemplateRecipeHandler {
         }
 
         public String get(Object... args) {
-            return StatCollector.translateToLocalFormatted(key, args);
+            return TranslationHelper.translateFormattedFixed(key, args);
         }
 
         public String getKey() {
@@ -129,7 +130,7 @@ public class Mob_Handler extends TemplateRecipeHandler {
     }
 
     private static final Logger LOG = LogManager.getLogger(Tags.MODID + "[Mob Handler]");
-    private static final Mob_Handler instance = new Mob_Handler();
+    private static final MobHandler instance = new MobHandler();
     private static final List<MobCachedRecipe> cachedRecipes = new ArrayList<>();
     public static int cycleTicksStatic = Math.abs((int) System.currentTimeMillis());
     private static final int itemsPerRow = 8, itemXShift = 18, itemYShift = 18, nextRowYShift = 35;
@@ -181,7 +182,7 @@ public class Mob_Handler extends TemplateRecipeHandler {
         });
     }
 
-    public Mob_Handler() {
+    public MobHandler() {
         this.transferRects.add(new RecipeTransferRect(new Rectangle(7, 62, 16, 16), getOverlayIdentifier()));
         if (!NEI_Config.isAdded) {
             FMLInterModComms.sendRuntimeMessage(
@@ -196,7 +197,7 @@ public class Mob_Handler extends TemplateRecipeHandler {
 
     @Override
     public TemplateRecipeHandler newInstance() {
-        return new Mob_Handler();
+        return new MobHandler();
     }
 
     @Override
@@ -441,6 +442,29 @@ public class Mob_Handler extends TemplateRecipeHandler {
         }
         for (MobCachedRecipe r : cachedRecipes) if (r.mInput.stream()
             .anyMatch(ingredient::isItemEqual)) arecipes.add(r);
+    }
+
+    public static boolean isUsageInfernalMob(ItemStack ingredient) {
+        if (LoaderReference.EnderIO) {
+            if (ingredient.getItem() == Item.getItemFromBlock(EnderIOGetter.blockPoweredSpawner())) {
+                if (!ingredient.hasTagCompound() || !ingredient.getTagCompound()
+                    .hasKey("mobType")) {
+                    return true;
+                }
+                for (MobCachedRecipe r : cachedRecipes) if (r.mInput.stream()
+                    .anyMatch(
+                        s -> s.getItem() == ingredient.getItem() && Objects.equals(
+                            s.getTagCompound()
+                                .getString("mobType"),
+                            ingredient.getTagCompound()
+                                .getString("mobType")))
+                    && r.infernaltype > 0) return true;
+                return false;
+            }
+        }
+        for (MobCachedRecipe r : cachedRecipes) if (r.mInput.stream()
+            .anyMatch(ingredient::isItemEqual) && r.infernaltype > 0) return true;
+        return false;
     }
 
     @Override

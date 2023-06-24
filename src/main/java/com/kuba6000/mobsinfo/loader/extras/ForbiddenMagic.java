@@ -36,10 +36,8 @@ public class ForbiddenMagic implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo.addAll(
-                Arrays.asList(
-                    "Chance: 50%",
-                    "* Drops only when the mob has weakness (II or higher) potion effect applied"));
+            drop.variableChanceInfo
+                .addAll(Arrays.asList(Translations.CHANCE.get(50d), Translations.DROPS_ONLY_WITH_WEAKNESS_2.get()));
             drops.add(drop);
         }
 
@@ -53,7 +51,8 @@ public class ForbiddenMagic implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo.add("Chance: " + 2.86d + "% (or 10% when on Extreme Hills biome)");
+            drop.variableChanceInfo
+                .add(Translations.CHANCE.get(2.86d) + " (" + Translations.OR_BIOME.get(10d, "Extreme Hills") + ")");
             drops.add(drop);
         }
 
@@ -69,8 +68,10 @@ public class ForbiddenMagic implements IExtraLoader {
                     false,
                     false);
                 drop.variableChance = true;
-                drop.variableChanceInfo
-                    .addAll(Arrays.asList("Chance: 100%", "* Drops only when Greedy enchantment is applied"));
+                drop.variableChanceInfo.addAll(
+                    Arrays.asList(
+                        Translations.CHANCE.get(100d),
+                        "* " + Translations.DROPS_ONLY_WITH_ENCHANT.get("Greedy")));
             } else {
                 drop = new MobDrop(
                     new ItemStack(ForbiddenItems.resource, 1, 0),
@@ -81,8 +82,10 @@ public class ForbiddenMagic implements IExtraLoader {
                     false,
                     false);
                 drop.variableChance = true;
-                drop.variableChanceInfo
-                    .addAll(Arrays.asList("Chance: " + 8.57d + "%", "* Drops only when Greedy enchantment is applied"));
+                drop.variableChanceInfo.addAll(
+                    Arrays.asList(
+                        Translations.CHANCE.get(8.57d),
+                        "* " + Translations.DROPS_ONLY_WITH_ENCHANT.get("Greedy")));
             }
             drops.add(drop);
         }
@@ -97,8 +100,8 @@ public class ForbiddenMagic implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + 15.38d + "%", "* Drops only when killed using Skull Axe"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(Translations.CHANCE.get(15.38d), "* " + Translations.DROPS_ONLY_USING.get("Skull Axe")));
             drops.add(drop);
         }
 
@@ -112,8 +115,8 @@ public class ForbiddenMagic implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + 11.54d + "%", "* Drops only when killed using Skull Axe"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(Translations.CHANCE.get(11.54d), "* " + Translations.DROPS_ONLY_USING.get("Skull Axe")));
             drops.add(drop);
         }
         if (recipe.entity.getClass() == EntityCreeper.class) {
@@ -126,8 +129,8 @@ public class ForbiddenMagic implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + 11.54d + "%", "* Drops only when killed using Skull Axe"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(Translations.CHANCE.get(11.54d), "* " + Translations.DROPS_ONLY_USING.get("Skull Axe")));
             drops.add(drop);
         }
 
@@ -143,9 +146,9 @@ public class ForbiddenMagic implements IExtraLoader {
         drop.variableChance = true;
         drop.variableChanceInfo.addAll(
             Arrays.asList(
-                "Chance: " + ((double) drop.chance / 100d) + "%",
-                "* Drops only when killed in the NETHER dimension",
-                "* Drops only when killed by non player entity"));
+                Translations.CHANCE.get(((double) drop.chance / 100d)),
+                "* " + Translations.DROPS_ONLY_IN_DIMENSION.get("NETHER"),
+                "* " + Translations.FORBIDDEN_MAGIC_NON_PLAYER.get()));
         drop.chance = 0;
         drops.add(drop);
 
@@ -183,9 +186,9 @@ public class ForbiddenMagic implements IExtraLoader {
             drop3.variableChance = true;
             drop3.variableChanceInfo.addAll(
                 Arrays.asList(
-                    "Chance: 0%",
-                    "* Each level of looting gives +5%",
-                    "* Each level of treasure focus on wand gives +5%"));
+                    Translations.CHANCE.get(0d),
+                    "* " + Translations.EACH_LEVEL_OF_GIVES.get("looting", "+5%"),
+                    "* " + Translations.EACH_LEVEL_OF_GIVES.get("treasure focus on wand", "+5%")));
             drops.add(drop3);
         }
     }

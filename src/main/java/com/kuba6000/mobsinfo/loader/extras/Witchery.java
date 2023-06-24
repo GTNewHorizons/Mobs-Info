@@ -50,8 +50,9 @@ public class Witchery implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + (chance * 100d) + "%", "* Drops only when player has Vampire book"));
+            drop.variableChanceInfo.addAll(
+                Arrays
+                    .asList(Translations.CHANCE.get((chance * 100d)), "* " + Translations.WITCHERY_VAMPIRE_BOOK.get()));
             drops.add(drop);
         }
 
@@ -68,8 +69,9 @@ public class Witchery implements IExtraLoader {
                         true,
                         false);
                     drop2.variableChance = true;
-                    drop2.variableChanceInfo
-                        .addAll(Arrays.asList("Chance: 5%", "* Drops only when killed using Arthana"));
+                    drop2.variableChanceInfo.addAll(
+                        Arrays
+                            .asList(Translations.CHANCE.get(5d), "* " + Translations.DROPS_ONLY_USING.get("Arthana")));
                     drops.add(drop2);
                 }
                 MobDrop drop2 = new MobDrop(
@@ -81,7 +83,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.addAll(Arrays.asList("Chance: 4%", "* Drops only when killed using Arthana"));
+                drop2.variableChanceInfo.addAll(
+                    Arrays.asList(Translations.CHANCE.get(4d), "* " + Translations.DROPS_ONLY_USING.get("Arthana")));
                 drops.add(drop2);
             } else if (recipe.entity instanceof EntityZombie) {
                 MobDrop drop2 = new MobDrop(
@@ -93,7 +96,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.addAll(Arrays.asList("Chance: 2%", "* Drops only when killed using Arthana"));
+                drop2.variableChanceInfo.addAll(
+                    Arrays.asList(Translations.CHANCE.get(2d), "* " + Translations.DROPS_ONLY_USING.get("Arthana")));
                 drops.add(drop2);
                 MobDrop drop3 = new MobDrop(
                     com.emoniph.witchery.Witchery.Items.GENERIC.itemSpectralDust.createStack(),
@@ -104,7 +108,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop3.variableChance = true;
-                drop3.variableChanceInfo.addAll(Arrays.asList("Chance: 3%", "* Drops only when killed using Arthana"));
+                drop3.variableChanceInfo.addAll(
+                    Arrays.asList(Translations.CHANCE.get(3d), "* " + Translations.DROPS_ONLY_USING.get("Arthana")));
                 drops.add(drop3);
             } else if (recipe.entity instanceof EntityCreeper) {
                 MobDrop drop2 = new MobDrop(
@@ -116,7 +121,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.addAll(Arrays.asList("Chance: 1%", "* Drops only when killed using Arthana"));
+                drop2.variableChanceInfo.addAll(
+                    Arrays.asList(Translations.CHANCE.get(1d), "* " + Translations.DROPS_ONLY_USING.get("Arthana")));
                 drops.add(drop2);
                 MobDrop drop3 = new MobDrop(
                     com.emoniph.witchery.Witchery.Items.GENERIC.itemCreeperHeart.createStack(),
@@ -127,7 +133,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop3.variableChance = true;
-                drop3.variableChanceInfo.add("Chance: 2% (or 8% when killed using Arthana)");
+                drop3.variableChanceInfo
+                    .add(Translations.CHANCE.get(2d) + " (" + Translations.OR_USING.get(8d, "Arthana") + ")");
                 drops.add(drop3);
             } else if (recipe.entity instanceof EntityDemon) {
                 MobDrop drop2 = new MobDrop(
@@ -139,7 +146,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.addAll(Arrays.asList("Chance: 33%", "* Drops only when killed using Arthana"));
+                drop2.variableChanceInfo
+                    .addAll(Arrays.asList("Chance: 33%", "* " + Translations.DROPS_ONLY_USING.get("Arthana")));
                 drops.add(drop2);
             } else if (recipe.entity instanceof EntityBat) {
                 MobDrop drop2 = new MobDrop(
@@ -151,7 +159,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.add("Chance: 33% (or 75% when killed using Arthana)");
+                drop2.variableChanceInfo
+                    .add(Translations.CHANCE.get(33d) + " (" + Translations.OR_USING.get(75d, "Arthana") + ")");
                 drops.add(drop2);
             } else if (recipe.entity instanceof EntityWolf) {
                 MobDrop drop2 = new MobDrop(
@@ -163,7 +172,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.add("Chance: 33% (or 75% when killed using Arthana)");
+                drop2.variableChanceInfo
+                    .add(Translations.CHANCE.get(33d) + " (" + Translations.OR_USING.get(75d, "Arthana") + ")");
                 drops.add(drop2);
                 MobDrop drop3 = new MobDrop(
                     new ItemStack(com.emoniph.witchery.Witchery.Blocks.WOLFHEAD, 1, 0),
@@ -184,7 +194,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.add("Chance: 20% (or 50% when killed using Arthana)");
+                drop2.variableChanceInfo
+                    .add(Translations.CHANCE.get(20d) + " (" + Translations.OR_USING.get(50d, "Arthana") + ")");
                 drops.add(drop2);
             } else if (recipe.entity instanceof EntitySheep) {
                 MobDrop drop2 = new MobDrop(
@@ -196,7 +207,8 @@ public class Witchery implements IExtraLoader {
                     false,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.addAll(Arrays.asList("Chance: 75%", "* Only when killer is a Warewolf"));
+                drop2.variableChanceInfo
+                    .addAll(Arrays.asList(Translations.CHANCE.get(75d), "* " + Translations.WITCHERY_WAREWOLF));
                 drops.add(drop2);
             } else if (recipe.entity instanceof EntityToad) {
                 MobDrop drop2 = new MobDrop(
@@ -208,7 +220,8 @@ public class Witchery implements IExtraLoader {
                     true,
                     false);
                 drop2.variableChance = true;
-                drop2.variableChanceInfo.add("Chance: 20% (or 50% when killed using Arthana)");
+                drop2.variableChanceInfo
+                    .add(Translations.CHANCE.get(20d) + " (" + Translations.OR_USING.get(50d, "Arthana") + ")");
                 drops.add(drop2);
             } else {
                 Class<?> theClass = recipe.entity.getClass();
@@ -227,7 +240,10 @@ public class Witchery implements IExtraLoader {
                                     true,
                                     false);
                                 drop2.variableChance = true;
-                                drop2.variableChanceInfo.add("Chance: 33% (or 75% when killed using Arthana)");
+                                drop2.variableChanceInfo.add(
+                                    Translations.CHANCE.get(33d) + " ("
+                                        + Translations.OR_USING.get(75d, "Arthana")
+                                        + ")");
                                 drops.add(drop2);
                             }
                         } else {
@@ -240,7 +256,8 @@ public class Witchery implements IExtraLoader {
                                 true,
                                 false);
                             drop2.variableChance = true;
-                            drop2.variableChanceInfo.add("Chance: 33% (or 75% when killed using Arthana)");
+                            drop2.variableChanceInfo.add(
+                                Translations.CHANCE.get(33d) + " (" + Translations.OR_USING.get(75d, "Arthana") + ")");
                             drops.add(drop2);
                             if ((upperName.contains("WOLF") || name.contains("Dog"))) {
                                 MobDrop drop3 = new MobDrop(
@@ -272,7 +289,8 @@ public class Witchery implements IExtraLoader {
                 true,
                 false);
             drop2.variableChance = true;
-            drop2.variableChanceInfo.add("Chance: 33% (or 50% when killed using Arthana)");
+            drop2.variableChanceInfo
+                .add(Translations.CHANCE.get(33d) + " (" + Translations.OR_USING.get(50d, "Arthana") + ")");
             drops.add(drop2);
         }
 

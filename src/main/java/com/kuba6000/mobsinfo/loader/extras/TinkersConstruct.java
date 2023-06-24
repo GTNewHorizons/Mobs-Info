@@ -62,9 +62,9 @@ public class TinkersConstruct implements IExtraLoader {
             drop.variableChance = true;
             drop.variableChanceInfo.addAll(
                 Arrays.asList(
-                    "Base chance: 0%",
-                    "Each level of beheading on your sword gives additional 10%",
-                    "If you are using a Cleaver, it gives another 20%"));
+                    Translations.BASE_CHANCE.get(0d),
+                    Translations.TINKERS_CONSTRUCT_BEHEADING.get(10d),
+                    Translations.TINKERS_CONSTRUCT_BEHEADING_1.get(20d)));
             drops.add(drop);
 
             if (((EntitySkeleton) recipe.entity).getSkeletonType() == 1) {
@@ -93,9 +93,9 @@ public class TinkersConstruct implements IExtraLoader {
             drop.variableChance = true;
             drop.variableChanceInfo.addAll(
                 Arrays.asList(
-                    "Base chance: 0%",
-                    "Each level of beheading on your sword gives additional 10%",
-                    "If you are using a cleaver, it gives another 20%"));
+                    Translations.BASE_CHANCE.get(0d),
+                    Translations.TINKERS_CONSTRUCT_BEHEADING.get(10d),
+                    Translations.TINKERS_CONSTRUCT_BEHEADING_1.get(20d)));
             drops.add(drop);
 
             MobDrop drop2 = new MobDrop(
@@ -107,7 +107,8 @@ public class TinkersConstruct implements IExtraLoader {
                 true,
                 false);
             drop2.variableChance = true;
-            drop2.variableChanceInfo.addAll(Arrays.asList("Chance: 10%", "* Drops only when killed using Cleaver"));
+            drop2.variableChanceInfo.addAll(
+                Arrays.asList(Translations.CHANCE.get(10d), "* " + Translations.DROPS_ONLY_USING.get("Cleaver")));
             drops.add(drop2);
         }
 
@@ -123,9 +124,9 @@ public class TinkersConstruct implements IExtraLoader {
             drop.variableChance = true;
             drop.variableChanceInfo.addAll(
                 Arrays.asList(
-                    "Base chance: 0%",
-                    "Each level of beheading on your sword gives additional 5%",
-                    "If you are using a cleaver, it gives another 10%"));
+                    Translations.BASE_CHANCE.get(0d),
+                    Translations.TINKERS_CONSTRUCT_BEHEADING.get(5d),
+                    Translations.TINKERS_CONSTRUCT_BEHEADING_1.get(10d)));
             drops.add(drop);
         }
 

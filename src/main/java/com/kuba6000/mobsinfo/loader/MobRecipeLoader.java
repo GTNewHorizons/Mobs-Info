@@ -97,7 +97,7 @@ import com.kuba6000.mobsinfo.mixin.minecraft.EntityAccessor;
 import com.kuba6000.mobsinfo.mixin.minecraft.EntityLivingAccessor;
 import com.kuba6000.mobsinfo.mixin.minecraft.EntityLivingBaseAccessor;
 import com.kuba6000.mobsinfo.mixin.minecraft.EntitySlimeAccessor;
-import com.kuba6000.mobsinfo.nei.Mob_Handler;
+import com.kuba6000.mobsinfo.nei.MobHandler;
 import com.kuba6000.mobsinfo.network.LoadConfigPacket;
 import com.mojang.authlib.GameProfile;
 
@@ -1104,9 +1104,10 @@ public class MobRecipeLoader {
     public static void processMobRecipeMap() {
         LOG.info("Loading config");
 
+        Config.synchronizeConfiguration();
         OverridesConfig.LoadConfig();
 
-        if (isClientSided) Mob_Handler.clearRecipes();
+        if (isClientSided) MobHandler.clearRecipes();
         MobNameToRecipeMap.clear();
         LoadConfigPacket.instance.mobsToLoad.clear();
         LoadConfigPacket.instance.mobsOverrides.clear();
@@ -1165,7 +1166,7 @@ public class MobRecipeLoader {
 
     @SideOnly(Side.CLIENT)
     public static void processMobRecipeMap(HashSet<String> mobs, HashMap<String, MobOverride> overrides) {
-        Mob_Handler.clearRecipes();
+        MobHandler.clearRecipes();
         MobNameToRecipeMap.clear();
 
         MinecraftForge.EVENT_BUS.post(new PreMobsRegistrationEvent());
@@ -1201,12 +1202,12 @@ public class MobRecipeLoader {
             drops.sort(Comparator.comparing(d -> d.type)); // Fix GUI
             recipe.refresh();
 
-            Mob_Handler.addRecipe(v.mob, drops);
+            MobHandler.addRecipe(v.mob, drops);
             MobNameToRecipeMap.put(k, recipe);
             LOG.info("Registered " + k);
         });
         MinecraftForge.EVENT_BUS.post(new PostMobsRegistrationEvent());
         LOG.info("Sorting NEI map");
-        Mob_Handler.sortCachedRecipes();
+        MobHandler.sortCachedRecipes();
     }
 }

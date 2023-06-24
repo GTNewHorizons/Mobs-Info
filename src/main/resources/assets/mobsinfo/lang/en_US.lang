@@ -18,6 +18,47 @@ mobsinfo.mobhandler.lootable=Looting is applied
 mobsinfo.mobhandler.player_only=§7Hard player-only
 mobsinfo.mobhandler.peaceful_allowed=Allowed in peaceful
 
+mobsinfo.mobhandlerinfernal.title=Infernal Mobs - Drop Table
+mobsinfo.mobhandlerinfernal.format=Format:
+mobsinfo.mobhandlerinfernal.format_1=Drop table name - x% (y%)
+mobsinfo.mobhandlerinfernal.format_2=x - Chance to get
+mobsinfo.mobhandlerinfernal.format_3=y - Chance to get when the mob
+mobsinfo.mobhandlerinfernal.format_4=always spawns infernal
+mobsinfo.mobhandlerinfernal.elite=Elite drops - %.2f%% (%.2f%%)
+mobsinfo.mobhandlerinfernal.ultra=Ultra drops - %.3f%% (%.2f%%)
+mobsinfo.mobhandlerinfernal.inferno=Inferno drops - %.3f%% (%.3f%%)
+mobsinfo.mobhandlerinfernal.tooltip_chance=Total chance to get: %.4f%%
+mobsinfo.mobhandlerinfernal.tooltip_chance_always=Total chance to get when always infernal: %.4f%%
+
+#Extras (compatibility)
+mobsinfo.extras.chance=Chance: %.2f%%
+mobsinfo.extras.base_chance=Base chance: %.2f%%
+mobsinfo.extras.variable_chance=Variable chance
+mobsinfo.extras.drops_only_using=Drops only when killed using %s
+mobsinfo.extras.drops_only_in_dimension=Drops only in %s dimension
+mobsinfo.extras.drops_only_with_weakness=Drops only when the mob has weakness potion effect applied
+mobsinfo.extras.drops_only_with_weakness_2=Drops only when the mob has weakness potion (II or higher) effect applied
+mobsinfo.extras.drops_only_with_enchant=Drops only when %s enchantment is applied
+mobsinfo.extras.each_level_of_gives=Each level of %s gives %s
+mobsinfo.extras.or_biome=Or %.2f%% when on %s biome
+mobsinfo.extras.or_using=or %.2f%% when killed using %s
+
+mobsinfo.extras.avaritia_skull_sword=Drops only when killed using Skull Sword and no other skulls were dropped
+mobsinfo.extras.draconic_evolution_mob_soul=BASED ON REAPER ENCHANT LEVEL - AND WEAPON |
+mobsinfo.extras.draconic_evolution_mob_soul_1=LEVEL | NONE | I | II | III | IV | V
+mobsinfo.extras.draconic_evolution_mob_soul_2=Any/None | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.draconic_evolution_mob_soul_3=Wyvern Sword/Bow | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.draconic_evolution_mob_soul_4=Draconic Sword/Bow | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.draconic_evolution_mob_soul_5=Draconic Staff of Power | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.emt_creeper=Drops only when Creeper is powered
+mobsinfo.extras.forbidden_magic_non_player=Drops only when killed by non player entity
+mobsinfo.extras.open_blocks_small_chance=Chance: Small
+mobsinfo.extras.tinkers_construct_beheading=Each level of beheading on your weapon gives additional %.2f%%
+mobsinfo.extras.tinkers_construct_beheading_1=If you are using a Cleaver, it gives another %.2f%%
+mobsinfo.extras.witchery_vampire_book=Drops only when player has Vampire book
+mobsinfo.extras.witchery_warewolf=Only when killer is a Warewolf
+
+
 #Commands
 mobsinfo.commandhandler.invalid=§cInvalid use ! The proper use of this command is /%s
 mobsinfo.commandhandler.cant_find=§cCan't find command option %s

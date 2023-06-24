@@ -23,6 +23,7 @@ package com.kuba6000.mobsinfo.nei;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.kuba6000.mobsinfo.Tags;
+import com.kuba6000.mobsinfo.api.LoaderReference;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 
@@ -32,6 +33,10 @@ public class IMCForNEI {
 
         sendHandler("mobsinfo.mobhandler", "minecraft:diamond_sword", 168, 192, 1, 6);
         sendCatalyst("mobsinfo.mobhandler", "minecraft:diamond_sword");
+        if (LoaderReference.InfernalMobs) {
+            sendHandler("mobsinfo.mobhandlerinfernal", "minecraft:diamond_sword", 168, 192, 1, 6);
+            sendCatalyst("mobsinfo.mobhandlerinfernal", "minecraft:diamond_sword");
+        }
     }
 
     private static void sendHandler(String aName, String aBlock, int width, int height, int maxrecipesperpage,

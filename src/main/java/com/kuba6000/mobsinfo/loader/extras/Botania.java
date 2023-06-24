@@ -30,8 +30,10 @@ public class Botania implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + 15.38d + "%", "* Drops only when killed using Elementium Axe"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(
+                    Translations.CHANCE.get(15.38d),
+                    "* " + Translations.DROPS_ONLY_USING.get("Elementium Axe")));
             drops.add(drop);
         } else if (recipe.entity instanceof EntityZombie && !(recipe.entity instanceof EntityPigZombie)) {
             MobDrop drop = new MobDrop(
@@ -43,8 +45,10 @@ public class Botania implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + 7.69d + "%", "* Drops only when killed using Elementium Axe"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(
+                    Translations.CHANCE.get(7.69d),
+                    "* " + Translations.DROPS_ONLY_USING.get("Elementium Axe")));
             drops.add(drop);
         } else if (recipe.entity instanceof EntityCreeper) {
             MobDrop drop = new MobDrop(
@@ -56,8 +60,10 @@ public class Botania implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + 7.69d + "%", "* Drops only when killed using Elementium Axe"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(
+                    Translations.CHANCE.get(7.69d),
+                    "* " + Translations.DROPS_ONLY_USING.get("Elementium Axe")));
             drops.add(drop);
         } else if (recipe.entity instanceof EntityDoppleganger) {
             MobDrop drop = new MobDrop(
@@ -69,8 +75,10 @@ public class Botania implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.variableChanceInfo
-                .addAll(Arrays.asList("Chance: " + 7.69d + "%", "* Drops only when killed using Elementium Axe"));
+            drop.variableChanceInfo.addAll(
+                Arrays.asList(
+                    Translations.CHANCE.get(7.69d),
+                    "* " + Translations.DROPS_ONLY_USING.get("Elementium Axe")));
             drops.add(drop);
         }
     }
