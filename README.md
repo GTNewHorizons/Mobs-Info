@@ -1,4 +1,7 @@
-# MobsInfo 1.7.10
+# MobsInfo 1.7.10 FORK
+
+### Please open any mod-related PRs [upstream](https://github.com/kuba6000/Mobs-Info).
+### If you want to change something GTNH-specific please try to do it in the configs or [KubaTech](https://github.com/GTNewHorizons/KubaTech/blob/master/src/main/java/kubatech/loaders/MobHandlerLoader.java).
 
 ## About
 
