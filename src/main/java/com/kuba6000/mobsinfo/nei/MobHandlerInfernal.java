@@ -4,6 +4,7 @@ import static com.kuba6000.mobsinfo.config.Config.Compatibility.enableMobHandler
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -304,7 +305,8 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
             eliteCount = eliteStacks.size();
             elite = new ArrayList<>();
 
-            for (ItemStack eliteStack : eliteStacks) {
+            for (Iterator<ItemStack> iterator = eliteStacks.iterator(); iterator.hasNext();) {
+                ItemStack eliteStack = iterator.next();
                 elite.add(
                     new InfernalPositionedStack(
                         eliteStack.copy(),
@@ -313,7 +315,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
                         eliteChance / eliteCount,
                         1d / eliteCount));
                 xoffset += itemXShift;
-                if (xoffset >= xorigin + (itemXShift * itemsPerRow)) {
+                if (xoffset >= xorigin + (itemXShift * itemsPerRow) && iterator.hasNext()) {
                     xoffset = xorigin;
                     yoffset += itemYShift;
                 }
@@ -326,7 +328,8 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
             ultraCount = ultraStacks.size();
             ultra = new ArrayList<>();
 
-            for (ItemStack ultraStack : ultraStacks) {
+            for (Iterator<ItemStack> iterator = ultraStacks.iterator(); iterator.hasNext();) {
+                ItemStack ultraStack = iterator.next();
                 ultra.add(
                     new InfernalPositionedStack(
                         ultraStack.copy(),
@@ -335,7 +338,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
                         (ultraChance * eliteChance) / ultraCount,
                         ultraChance / ultraCount));
                 xoffset += itemXShift;
-                if (xoffset >= xorigin + (itemXShift * itemsPerRow)) {
+                if (xoffset >= xorigin + (itemXShift * itemsPerRow) && iterator.hasNext()) {
                     xoffset = xorigin;
                     yoffset += itemYShift;
                 }
@@ -348,7 +351,8 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
             infernoCount = infernoStacks.size();
             inferno = new ArrayList<>();
 
-            for (ItemStack infernoStack : infernoStacks) {
+            for (Iterator<ItemStack> iterator = infernoStacks.iterator(); iterator.hasNext();) {
+                ItemStack infernoStack = iterator.next();
                 inferno.add(
                     new InfernalPositionedStack(
                         infernoStack.copy(),
@@ -357,7 +361,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
                         (infernoChance * ultraChance * eliteChance) / infernoCount,
                         (infernoChance * ultraChance) / infernoCount));
                 xoffset += itemXShift;
-                if (xoffset >= xorigin + (itemXShift * itemsPerRow)) {
+                if (xoffset >= xorigin + (itemXShift * itemsPerRow) && iterator.hasNext()) {
                     xoffset = xorigin;
                     yoffset += itemYShift;
                 }
