@@ -40,6 +40,7 @@ public class ExtraLoader {
         if (LoaderReference.WitchingGadgets) loaders.add(new WitchingGadgets());
         if (LoaderReference.Thaumcraft) loaders.add(new Thaumcraft());
         if (LoaderReference.Automagy) loaders.add(new Automagy());
+        if (LoaderReference.GTPlusPlus) loaders.add(new GregtechPlusPlus());
 
         // LAST
         if (LoaderReference.MineTweaker) loaders.add(new MineTweaker());

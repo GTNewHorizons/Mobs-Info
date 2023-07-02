@@ -29,5 +29,7 @@ public class LoaderReference {
     public static final boolean ElectroMagicTools = Loader.isModLoaded("EMT");
     public static final boolean WitchingGadgets = Loader.isModLoaded("WitchingGadgets");
     public static final boolean Automagy = Loader.isModLoaded("Automagy");
+    public static final boolean GTPlusPlus = Loader.isModLoaded("miscutils");
+    public static final boolean Gregtech5 = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
 
 }

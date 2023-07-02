@@ -82,6 +82,9 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.machine.spawner.BlockPoweredSpawner;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.objects.ItemData;
+import gregtech.api.util.GT_OreDictUnificator;
 
 public class MobHandler extends TemplateRecipeHandler {
 
@@ -417,7 +420,11 @@ public class MobHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        for (MobCachedRecipe r : cachedRecipes) if (r.contains(r.mOutputs, result)) arecipes.add(r);
+        if (LoaderReference.Gregtech5) {
+            List<ItemStack> results = GT5Helper.getAssociated(result);
+            for (MobCachedRecipe r : cachedRecipes) if (results.stream()
+                .anyMatch(i -> r.contains(r.mOutputs, i))) arecipes.add(r);
+        } else for (MobCachedRecipe r : cachedRecipes) if (r.contains(r.mOutputs, result)) arecipes.add(r);
     }
 
     @Override
@@ -629,6 +636,31 @@ public class MobHandler extends TemplateRecipeHandler {
 
         public static void BlockPoweredSpawner$writeMobTypeToNBT(NBTTagCompound nbt, String type) {
             BlockPoweredSpawner.writeMobTypeToNBT(nbt, type);
+        }
+    }
+
+    private static class GT5Helper {
+
+        public static List<ItemStack> getAssociated(ItemStack aResult) {
+            ItemData tPrefixMaterial = GT_OreDictUnificator.getAssociation(aResult);
+
+            ArrayList<ItemStack> tResults = new ArrayList<>();
+            tResults.add(aResult);
+            tResults.add(GT_OreDictUnificator.get(true, aResult));
+            if ((tPrefixMaterial != null) && (!tPrefixMaterial.mBlackListed)
+                && (!tPrefixMaterial.mPrefix.mFamiliarPrefixes.isEmpty())) {
+                for (OrePrefixes tPrefix : tPrefixMaterial.mPrefix.mFamiliarPrefixes) {
+                    tResults.add(GT_OreDictUnificator.get(tPrefix, tPrefixMaterial.mMaterial.mMaterial, 1L));
+                }
+            }
+            if (aResult.getUnlocalizedName()
+                .startsWith("gt.blockores")) {
+                for (int i = 0; i < 8; i++) {
+                    tResults.add(new ItemStack(aResult.getItem(), 1, aResult.getItemDamage() % 1000 + i * 1000));
+                }
+            }
+
+            return tResults;
         }
     }
 }

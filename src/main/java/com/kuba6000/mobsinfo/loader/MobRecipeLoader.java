@@ -636,8 +636,8 @@ public class MobRecipeLoader {
                 ((EntitySkeleton) e).setSkeletonType(1);
             else if (StatCollector.translateToLocal("entity." + k + ".name")
                 .equals("entity." + k + ".name")) {
-                    LOG.info("Entity " + k + " does't have localized name, skipping");
-                    return;
+                    LOG.warn("Entity " + k + " does't have localized name!");
+                    // return;
                 }
 
             // POWERFULL GENERATION
