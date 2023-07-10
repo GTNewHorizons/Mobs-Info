@@ -46,6 +46,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.Blocks;
@@ -408,6 +409,8 @@ public class MobRecipeLoader {
         Map<String, ArrayList<MobDrop>> moblist;
     }
 
+    public static final List<Double> DQRChances = new ArrayList<>();
+
     @SuppressWarnings({ "unchecked", "UnstableApiUsage" })
     public static void generateMobRecipeMap() {
 
@@ -527,7 +530,10 @@ public class MobRecipeLoader {
                 if (LoaderReference.TwilightForest && new Throwable().getStackTrace()[1].getClassName()
                     .equals("twilightforest.client.renderer.entity.RenderTFSnowQueenIceShield"))
                     return Blocks.packed_ice;
-                return super.getBlock(aX, aY, aZ);
+                if ((aX >= 16) && (aZ >= 16) && (aX < 32) && (aZ < 32)) {
+                    return aY == 64 ? Blocks.grass : Blocks.air;
+                }
+                return Blocks.air;
             }
         };
         f.isRemote = true; // quick hack to get around achievements
@@ -646,7 +652,10 @@ public class MobRecipeLoader {
 
                 e.captureDrops = true;
 
-                if (e instanceof EntitySlime) ((EntitySlimeAccessor) e).callSetSlimeSize(1);
+                if (e instanceof EntitySlime) {
+                    if (v == EntityMagmaCube.class) ((EntitySlimeAccessor) e).callSetSlimeSize(2);
+                    else((EntitySlimeAccessor) e).callSetSlimeSize(1);
+                }
 
                 ((EntityAccessor) e).setRand(frand);
 
@@ -701,126 +710,180 @@ public class MobRecipeLoader {
                     collector.newRound();
                 };
 
-                checkForWitchery.run();
-
-                doTheDrop.accept(() -> {
-                    ((EntityLivingBaseAccessor) e).callDropFewItems(true, 0);
-                    return true;
-                }, drops, "normal");
-
-                checkForWitchery.run();
-
-                doTheDrop.accept(() -> {
-                    ((EntityLivingBaseAccessor) e).callDropFewItems(true, 1);
-                    return true;
-                }, dropslooting, "normal");
-
-                doTheDrop.accept(() -> {
-                    ((EntityLivingBaseAccessor) e).callDropRareDrop(0);
-                    return true;
-                }, raredrops, "rare");
-
-                doTheDrop.accept(() -> {
-                    ((EntityLivingBaseAccessor) e).callDropRareDrop(1);
-                    return true;
-                }, superraredrops, "rare");
-
-                if (registeringWitherSkeleton && e instanceof EntitySkeleton && k.equals("witherSkeleton")) {
-                    dropinstance i = new dropinstance(new ItemStack(Items.stone_sword), additionaldrops);
-                    i.isDamageRandomized = true;
-                    int maxdamage = i.stack.getMaxDamage();
-                    int max = Math.max(maxdamage - 25, 1);
-                    for (int d = Math.min(max, 25); d <= max; d++) i.damagesPossible.put(d, 1);
-                    additionaldrops.add(i, 1d);
-                } else try {
-                    Class<?> cl = e.getClass();
-                    boolean detectedException;
-                    do {
-                        detectedException = false;
-                        try {
-                            cl.getDeclaredMethod(addRandomArmorName);
-                        } catch (Exception ex) {
-                            detectedException = true;
-                            cl = cl.getSuperclass();
+                ModUtils.TriConsumer<Supplier<Boolean>, droplist, String> doTheDQRDrop = (callerCanceller, dList,
+                    dListName) -> {
+                    if (callerCanceller.get()) {
+                        if (e.capturedDrops.size() != DQRChances.size()) {
+                            int c = DQRChances.size();
+                            DQRChances.clear();
+                            throw new RuntimeException(
+                                "DQR MOB PARSE EXCEPTION -> captured mobs " + e.capturedDrops.size()
+                                    + " / DQRChances "
+                                    + c);
                         }
-                    } while (detectedException && !cl.equals(Entity.class));
-                    if (cl.equals(EntityLiving.class) || cl.equals(Entity.class)) throw new Exception();
-                    cl = e.getClass();
-                    do {
-                        detectedException = false;
-                        try {
-                            cl.getDeclaredMethod(enchantEquipmentName);
-                        } catch (Exception ex) {
-                            detectedException = true;
-                            cl = cl.getSuperclass();
+
+                        for (int i = 0; i < e.capturedDrops.size(); i++) {
+                            dList.add(
+                                new dropinstance(
+                                    e.capturedDrops.get(i)
+                                        .getEntityItem(),
+                                    dList),
+                                DQRChances.get(i));
                         }
-                    } while (detectedException && !cl.equals(EntityLiving.class));
-                    boolean usingVanillaEnchantingMethod = cl.equals(EntityLiving.class);
-                    double chanceModifierLocal = 1f;
-                    if (v.getName()
-                        .startsWith("twilightforest.entity")) {
-                        frand.forceFloatValue = 0f;
-                        chanceModifierLocal = 0.25f;
                     }
-                    boolean second = false;
-                    do {
-                        ((EntityLivingAccessor) e).callAddRandomArmor();
-                        if (!usingVanillaEnchantingMethod) ((EntityLivingAccessor) e).callEnchantEquipment();
-                        ItemStack[] lastActiveItems = e.getLastActiveItems();
-                        for (int j = 0, lastActiveItemsLength = lastActiveItems.length; j
-                            < lastActiveItemsLength; j++) {
-                            ItemStack stack = lastActiveItems[j];
-                            if (stack != null) {
-                                if (LoaderReference.Thaumcraft)
-                                    if (stack.getItem() instanceof ItemWandCasting) continue; // crashes the game when
-                                                                                              // rendering in GUI
 
-                                int randomenchant = -1;
-                                if (stack.hasTagCompound()
-                                    && stack.stackTagCompound.hasKey(randomEnchantmentDetectedString)) {
-                                    randomenchant = stack.stackTagCompound.getInteger(randomEnchantmentDetectedString);
-                                    stack.stackTagCompound.removeTag("ench");
-                                }
-                                dropinstance i = additionaldrops.add(
-                                    new dropinstance(stack.copy(), additionaldrops),
-                                    frand.chance * chanceModifierLocal
-                                        * (usingVanillaEnchantingMethod ? (j == 0 ? 0.75d : 0.5d) : 1d));
-                                if (!i.isDamageRandomized && i.stack.isItemStackDamageable()) {
-                                    i.isDamageRandomized = true;
-                                    int maxdamage = i.stack.getMaxDamage();
-                                    int max = Math.max(maxdamage - 25, 1);
-                                    for (int d = Math.min(max, 25); d <= max; d++) i.damagesPossible.put(d, 1);
-                                }
-                                if (!i.isEnchatmentRandomized && randomenchant != -1) {
-                                    i.isEnchatmentRandomized = true;
-                                    i.enchantmentLevel = randomenchant;
-                                }
-                                if (usingVanillaEnchantingMethod) {
-                                    if (!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
-                                    stack.stackTagCompound.setInteger(randomEnchantmentDetectedString, 14);
-                                    dropinstance newdrop = additionaldrops.add(
+                    frand.newRound();
+                    DQRChances.clear();
+                    e.capturedDrops.clear();
+                };
+
+                if (v.getName()
+                    .startsWith("dqr.entity.")
+                    && !v.getName()
+                        .equals("dqr.entity.mobEntity.monsterTensei.DqmEntitySweetbag")) {
+                    doTheDQRDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropFewItems(true, 0);
+                        return true;
+                    }, drops, "normal");
+
+                    doTheDQRDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropFewItems(true, 1);
+                        return true;
+                    }, dropslooting, "normal");
+
+                    doTheDQRDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropRareDrop(0);
+                        return true;
+                    }, raredrops, "rare");
+
+                    doTheDQRDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropRareDrop(1);
+                        return true;
+                    }, superraredrops, "rare");
+                } else {
+                    checkForWitchery.run();
+
+                    doTheDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropFewItems(true, 0);
+                        return true;
+                    }, drops, "normal");
+
+                    checkForWitchery.run();
+
+                    doTheDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropFewItems(true, 1);
+                        return true;
+                    }, dropslooting, "normal");
+
+                    doTheDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropRareDrop(0);
+                        return true;
+                    }, raredrops, "rare");
+
+                    doTheDrop.accept(() -> {
+                        ((EntityLivingBaseAccessor) e).callDropRareDrop(1);
+                        return true;
+                    }, superraredrops, "rare");
+
+                    if (registeringWitherSkeleton && e instanceof EntitySkeleton && k.equals("witherSkeleton")) {
+                        dropinstance i = new dropinstance(new ItemStack(Items.stone_sword), additionaldrops);
+                        i.isDamageRandomized = true;
+                        int maxdamage = i.stack.getMaxDamage();
+                        int max = Math.max(maxdamage - 25, 1);
+                        for (int d = Math.min(max, 25); d <= max; d++) i.damagesPossible.put(d, 1);
+                        additionaldrops.add(i, 1d);
+                    } else try {
+                        Class<?> cl = e.getClass();
+                        boolean detectedException;
+                        do {
+                            detectedException = false;
+                            try {
+                                cl.getDeclaredMethod(addRandomArmorName);
+                            } catch (Exception ex) {
+                                detectedException = true;
+                                cl = cl.getSuperclass();
+                            }
+                        } while (detectedException && !cl.equals(Entity.class));
+                        if (cl.equals(EntityLiving.class) || cl.equals(Entity.class)) throw new Exception();
+                        cl = e.getClass();
+                        do {
+                            detectedException = false;
+                            try {
+                                cl.getDeclaredMethod(enchantEquipmentName);
+                            } catch (Exception ex) {
+                                detectedException = true;
+                                cl = cl.getSuperclass();
+                            }
+                        } while (detectedException && !cl.equals(EntityLiving.class));
+                        boolean usingVanillaEnchantingMethod = cl.equals(EntityLiving.class);
+                        double chanceModifierLocal = 1f;
+                        if (v.getName()
+                            .startsWith("twilightforest.entity")) {
+                            frand.forceFloatValue = 0f;
+                            chanceModifierLocal = 0.25f;
+                        }
+                        boolean second = false;
+                        do {
+                            ((EntityLivingAccessor) e).callAddRandomArmor();
+                            if (!usingVanillaEnchantingMethod) ((EntityLivingAccessor) e).callEnchantEquipment();
+                            ItemStack[] lastActiveItems = e.getLastActiveItems();
+                            for (int j = 0, lastActiveItemsLength = lastActiveItems.length; j
+                                < lastActiveItemsLength; j++) {
+                                ItemStack stack = lastActiveItems[j];
+                                if (stack != null) {
+                                    if (LoaderReference.Thaumcraft)
+                                        if (stack.getItem() instanceof ItemWandCasting) continue; // crashes the game
+                                                                                                  // when
+                                    // rendering in GUI
+
+                                    int randomenchant = -1;
+                                    if (stack.hasTagCompound()
+                                        && stack.stackTagCompound.hasKey(randomEnchantmentDetectedString)) {
+                                        randomenchant = stack.stackTagCompound
+                                            .getInteger(randomEnchantmentDetectedString);
+                                        stack.stackTagCompound.removeTag("ench");
+                                    }
+                                    dropinstance i = additionaldrops.add(
                                         new dropinstance(stack.copy(), additionaldrops),
-                                        frand.chance * chanceModifierLocal * (j == 0 ? 0.25d : 0.5d));
-                                    newdrop.isEnchatmentRandomized = true;
-                                    newdrop.enchantmentLevel = 14;
-                                    newdrop.isDamageRandomized = i.isDamageRandomized;
-                                    newdrop.damagesPossible = (HashMap<Integer, Integer>) i.damagesPossible.clone();
+                                        frand.chance * chanceModifierLocal
+                                            * (usingVanillaEnchantingMethod ? (j == 0 ? 0.75d : 0.5d) : 1d));
+                                    if (!i.isDamageRandomized && i.stack.isItemStackDamageable()) {
+                                        i.isDamageRandomized = true;
+                                        int maxdamage = i.stack.getMaxDamage();
+                                        int max = Math.max(maxdamage - 25, 1);
+                                        for (int d = Math.min(max, 25); d <= max; d++) i.damagesPossible.put(d, 1);
+                                    }
+                                    if (!i.isEnchatmentRandomized && randomenchant != -1) {
+                                        i.isEnchatmentRandomized = true;
+                                        i.enchantmentLevel = randomenchant;
+                                    }
+                                    if (usingVanillaEnchantingMethod) {
+                                        if (!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
+                                        stack.stackTagCompound.setInteger(randomEnchantmentDetectedString, 14);
+                                        dropinstance newdrop = additionaldrops.add(
+                                            new dropinstance(stack.copy(), additionaldrops),
+                                            frand.chance * chanceModifierLocal * (j == 0 ? 0.25d : 0.5d));
+                                        newdrop.isEnchatmentRandomized = true;
+                                        newdrop.enchantmentLevel = 14;
+                                        newdrop.isDamageRandomized = i.isDamageRandomized;
+                                        newdrop.damagesPossible = (HashMap<Integer, Integer>) i.damagesPossible.clone();
+                                    }
                                 }
                             }
-                        }
-                        Arrays.fill(e.getLastActiveItems(), null);
+                            Arrays.fill(e.getLastActiveItems(), null);
 
-                        if (second && frand.chance < 0.0000001d) {
-                            LOG.warn("Skipping " + k + " additional dropmap because it's too randomized");
-                            break;
-                        }
-                        second = true;
+                            if (second && frand.chance < 0.0000001d) {
+                                LOG.warn("Skipping " + k + " additional dropmap because it's too randomized");
+                                break;
+                            }
+                            second = true;
 
-                    } while (frand.nextRound());
-                } catch (Exception ignored) {}
+                        } while (frand.nextRound());
+                    } catch (Exception ignored) {}
 
-                frand.newRound();
-                collector.newRound();
+                    frand.newRound();
+                    collector.newRound();
+                }
 
                 if (drops.isEmpty() && raredrops.isEmpty() && additionaldrops.isEmpty()) {
                     ArrayList<MobDrop> arr = new ArrayList<>();
@@ -840,10 +903,6 @@ public class MobRecipeLoader {
                         int div = (int) Math.ceil(chance / 10000d);
                         stack.stackSize *= div;
                         chance /= div;
-                    }
-                    if (chance == 0) {
-                        LOG.warn("Detected 0% loot, setting to 0.01%");
-                        chance = 1;
                     }
                     dropinstance dlooting = dropslooting.get(drop);
                     moboutputs.add(
@@ -865,10 +924,6 @@ public class MobRecipeLoader {
                         stack.stackSize *= div;
                         chance /= div;
                     }
-                    if (chance == 0) {
-                        LOG.warn("Detected 0% loot, setting to 0.01%");
-                        chance = 1;
-                    }
                     moboutputs.add(
                         new MobDrop(
                             stack,
@@ -889,10 +944,6 @@ public class MobRecipeLoader {
                         stack.stackSize *= div;
                         chance /= div;
                     }
-                    if (chance == 0) {
-                        LOG.warn("Detected 0% loot, setting to 0.01%");
-                        chance = 1;
-                    }
                     moboutputs.add(
                         new MobDrop(
                             stack,
@@ -911,10 +962,6 @@ public class MobRecipeLoader {
                         int div = (int) Math.ceil(chance / 10000d);
                         stack.stackSize *= div;
                         chance /= div;
-                    }
-                    if (chance == 0) {
-                        LOG.warn("Detected 0% loot, setting to 0.01%");
-                        chance = 1;
                     }
                     moboutputs.add(
                         new MobDrop(

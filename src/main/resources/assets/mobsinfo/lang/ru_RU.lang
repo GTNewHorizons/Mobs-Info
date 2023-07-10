@@ -31,6 +31,8 @@ mobsinfo.mobhandlerinfernal.tooltip_chance=Общий шанс получить:
 mobsinfo.mobhandlerinfernal.tooltip_chance_always=Общий шанс получить, когда всегда инфернальным: %.4f%%
 
 #Extras (compatibility)
+mobsinfo.extras.minecraft_slime=Выпадает только тогда, когда слизень имеет малый размер
+mobsinfo.extras.minecraft_magma_cube=Выпадает только тогда, когда адский слизень НЕ имеет малый размер
 mobsinfo.extras.chance=Шанс: %.2f%%
 mobsinfo.extras.base_chance=Базовый шанс: %.2f%%
 mobsinfo.extras.variable_chance=Переменный шанс

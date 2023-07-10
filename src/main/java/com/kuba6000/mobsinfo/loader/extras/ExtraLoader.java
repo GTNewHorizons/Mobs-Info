@@ -20,6 +20,10 @@ public class ExtraLoader {
 
     private static void init() {
         initialized = true;
+        // FIRST
+        loaders.add(new Minecraft());
+
+        // Mods
         if (LoaderReference.DraconicEvolution) loaders.add(new DraconicEvolution());
         if (LoaderReference.TinkersConstruct) loaders.add(new TinkersConstruct());
         if (LoaderReference.Witchery) loaders.add(new Witchery());
@@ -41,8 +45,11 @@ public class ExtraLoader {
         if (LoaderReference.Thaumcraft) loaders.add(new Thaumcraft());
         if (LoaderReference.Automagy) loaders.add(new Automagy());
         if (LoaderReference.GTPlusPlus) loaders.add(new GregtechPlusPlus());
+        if (LoaderReference.DQRespect) loaders.add(new DQRespect());
+        if (LoaderReference.ChocoCraft) loaders.add(new ChocoCraft());
 
         // LAST
+        if (LoaderReference.EditMobDrops) loaders.add(new EditMobDrops());
         if (LoaderReference.MineTweaker) loaders.add(new MineTweaker());
     }
 

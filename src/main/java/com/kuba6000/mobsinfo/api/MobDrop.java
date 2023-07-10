@@ -22,7 +22,6 @@ package com.kuba6000.mobsinfo.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import net.minecraft.item.ItemStack;
 
@@ -59,8 +58,8 @@ public class MobDrop {
     public boolean lootable = false;
     public boolean playerOnly = false;
     public boolean variableChance = false;
-    public List<String> variableChanceInfo = new ArrayList<>();
-    public List<String> additionalInfo = new ArrayList<>();
+    public ArrayList<String> variableChanceInfo = new ArrayList<>();
+    public ArrayList<String> additionalInfo = new ArrayList<>();
 
     private MobDrop() {}
 
@@ -87,8 +86,10 @@ public class MobDrop {
             this.lootable,
             this.playerOnly);
         copy.variableChance = this.variableChance;
-        copy.variableChanceInfo = this.variableChanceInfo;
-        copy.additionalInfo = this.additionalInfo;
+        // noinspection unchecked
+        copy.variableChanceInfo = (ArrayList<String>) this.variableChanceInfo.clone();
+        // noinspection unchecked
+        copy.additionalInfo = (ArrayList<String>) this.additionalInfo.clone();
         return copy;
     }
 

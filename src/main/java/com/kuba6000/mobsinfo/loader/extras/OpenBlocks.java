@@ -11,6 +11,7 @@ public class OpenBlocks implements IExtraLoader {
 
     @Override
     public void process(String k, ArrayList<MobDrop> drops, MobRecipe recipe) {
+        if (openblocks.OpenBlocks.Blocks.trophy == null) return;
         TrophyHandler.Trophy trophy = TrophyHandler.Trophy.TYPES.get(k);
         if (trophy != null) {
             MobDrop drop = new MobDrop(trophy.getItemStack(), MobDrop.DropType.Normal, 0, null, null, false, false);

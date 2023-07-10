@@ -20,6 +20,15 @@ public class MineTweaker implements IExtraLoader {
 
     @Override
     public void process(String k, ArrayList<MobDrop> drops, MobRecipe recipe) {
+
+        try {
+            MineTweakerAPI.game.getClass()
+                .getMethod("getEntity", String.class);
+        } catch (Exception ignored) // not supported
+        {
+            return;
+        }
+
         IEntityDefinition ie = MineTweakerAPI.game.getEntity(k);
         if (ie != null) {
             for (Map.Entry<IItemStack, IntRange> entry : ie.getDropsToAdd()
@@ -43,6 +52,7 @@ public class MineTweaker implements IExtraLoader {
                     null,
                     false,
                     false);
+                drop.clampChance();
                 drops.add(drop);
             }
             for (Map.Entry<IItemStack, IntRange> entry : ie.getDropsToAddPlayerOnly()
@@ -66,6 +76,7 @@ public class MineTweaker implements IExtraLoader {
                     null,
                     false,
                     true);
+                drop.clampChance();
                 drops.add(drop);
             }
             for (IItemStack istack : ie.getDropsToRemove()) {

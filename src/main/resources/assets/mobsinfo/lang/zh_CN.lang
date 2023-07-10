@@ -1,4 +1,5 @@
 #This file is a translation file for KubaTech
+#Re-traslated by dfdvdsf/song682
 
 #NEI
 mobsinfo.mobhandler.normal_drops=常规掉落
@@ -8,11 +9,42 @@ mobsinfo.mobhandler.infernal_drops=精英掉落
 mobsinfo.mobhandler.infernal_cannot=无法生成精英怪
 mobsinfo.mobhandler.infernal_can=可以生成精英怪
 mobsinfo.mobhandler.infernal_always=总是生成精英怪
-mobsinfo.mobhandler.mod=Mod: 
+mobsinfo.mobhandler.mod=模组: 
 mobsinfo.mobhandler.max_health=最大生命值：
-mobsinfo.mobhandler.chance=几率：
-mobsinfo.mobhandler.average_reminder=§7§o请注意，这些是掉落的平均期望值.
-mobsinfo.mobhandler.lootable=掠夺附魔已生效
+mobsinfo.mobhandler.boss=Boss生物
+mobsinfo.mobhandler.cannot_use_vial=不能被灵魂瓶捕捉。
+mobsinfo.mobhandler.chance=几率： %.2f%%
+mobsinfo.mobhandler.average_reminder=§7§o请注意，这些是掉落物的期望平均值！
+mobsinfo.mobhandler.lootable=掠夺附魔已生效。
+mobsinfo.mobhandler.peaceful_allowed=可在和平模式下生成。
+
+#Extras (compatibility)
+mobsinfo.extras.chance=几率: %.2f%%
+mobsinfo.extras.base_chance=基本几率: %.2f%%
+mobsinfo.extras.variable_chance=可变化的几率
+mobsinfo.extras.drops_only_using=当使用%s时，才会掉落。
+mobsinfo.extras.drops_only_in_dimension=只在以下几个维度掉落： %s
+mobsinfo.extras.drops_only_with_weakness=当且仅当干掉的生物身上带有虚弱I效果时，才会掉落。
+mobsinfo.extras.drops_only_with_weakness_2=当且仅当干掉的生物身上带有虚弱II及以上等级的效果时，才会掉落。
+mobsinfo.extras.drops_only_with_enchant=当且仅当生物被附魔有%s的武器干掉时，才会掉落。
+mobsinfo.extras.each_level_of_gives=%s每增加一级给%s
+mobsinfo.extras.or_biome=或者%.2f%%在%s生物群系
+mobsinfo.extras.or_using=抑或当使用%s来干掉%.2f%%
+
+mobsinfo.extras.avaritia_skull_sword=当且仅当在使用烈焰之啄颅剑干掉它时才只掉落这个头颅
+mobsinfo.extras.draconic_evolution_mob_soul=§4基于收割者附魔等级以及武器 |
+mobsinfo.extras.draconic_evolution_mob_soul_1=等级 |   | I | II | III | IV | V
+mobsinfo.extras.draconic_evolution_mob_soul_2=任意/没有 | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.draconic_evolution_mob_soul_3=双足飞龙剑/双足飞龙弓 | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.draconic_evolution_mob_soul_4=神龙剑/神龙弓 | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.draconic_evolution_mob_soul_5=神龙物品的能力 | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%%
+mobsinfo.extras.emt_creeper=当且仅当被苦力怕炸飞时，才会掉落。
+mobsinfo.extras.forbidden_magic_non_player=当且仅当被非玩家实体干掉时候，才会掉落。
+mobsinfo.extras.open_blocks_small_chance=几率：小
+mobsinfo.extras.tinkers_construct_beheading=每一级斩首都会增加%.2f%%
+mobsinfo.extras.tinkers_construct_beheading_1=如果你明智的使用它，它还会掉落：%.2f%%
+mobsinfo.extras.witchery_vampire_book=当且仅当玩家手中有吸血鬼之书时，才会掉落。
+mobsinfo.extras.witchery_warewolf=当且仅当被狼人撕碎时，才会掉落。
 
 #Commands
 mobsinfo.commandhandler.invalid=§c无效使用 ! 该指令的正确使用是 /%s

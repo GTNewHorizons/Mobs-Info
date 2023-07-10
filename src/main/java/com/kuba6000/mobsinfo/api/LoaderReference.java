@@ -31,5 +31,8 @@ public class LoaderReference {
     public static final boolean Automagy = Loader.isModLoaded("Automagy");
     public static final boolean GTPlusPlus = Loader.isModLoaded("miscutils");
     public static final boolean Gregtech5 = Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi");
+    public static final boolean DQRespect = Loader.isModLoaded("DQMIIINext");
+    public static final boolean EditMobDrops = Loader.isModLoaded("editmobdrops");
+    public static final boolean ChocoCraft = Loader.isModLoaded("chococraft");
 
 }

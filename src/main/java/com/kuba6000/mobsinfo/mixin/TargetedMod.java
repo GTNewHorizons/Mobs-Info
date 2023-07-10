@@ -10,6 +10,8 @@ public enum TargetedMod {
     INFERNAL_MOBS("InfernalMobs", "InfernalMobs-", true),
     ENDER_IO("EnderIO", "EnderIO", true),
     DRACONIC_EVOLUTION("DraconicEvolution", "Draconic-Evolution-", true),
+    DQRespect("DQMIIINext", "[1.7.10]DQRmod", true),
+    ChocoCraft("chococraft", "ChocoCraftPlus-", true),
 
     ;
 

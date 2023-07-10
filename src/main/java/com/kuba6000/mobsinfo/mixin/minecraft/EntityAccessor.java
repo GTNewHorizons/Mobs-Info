@@ -12,4 +12,7 @@ public interface EntityAccessor {
 
     @Accessor
     void setRand(Random rand);
+
+    @Accessor
+    Random getRand();
 }

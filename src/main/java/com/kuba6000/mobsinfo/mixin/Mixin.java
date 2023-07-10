@@ -1,5 +1,7 @@
 package com.kuba6000.mobsinfo.mixin;
 
+import static com.kuba6000.mobsinfo.mixin.TargetedMod.ChocoCraft;
+import static com.kuba6000.mobsinfo.mixin.TargetedMod.DQRespect;
 import static com.kuba6000.mobsinfo.mixin.TargetedMod.DRACONIC_EVOLUTION;
 import static com.kuba6000.mobsinfo.mixin.TargetedMod.ENDER_IO;
 import static com.kuba6000.mobsinfo.mixin.TargetedMod.INFERNAL_MOBS;
@@ -29,6 +31,13 @@ public enum Mixin {
 
     // Draconic Evolution
     MinecraftForgeEventHandlerAccessor("DraconicEvolution.MinecraftForgeEventHandlerAccessor", DRACONIC_EVOLUTION),
+
+    // DQRespect
+    FuncCalcMobParamMixin("DQRespect.FuncCalcMobParamMixin", DQRespect),
+    DqmEntitySweetbagMixin("DQRespect.DqmEntitySweetbagMixin", DQRespect),
+
+    // ChocoCraft
+    EntityAnimalChocoboMixin("ChocoCraft.EntityAnimalChocoboMixin", ChocoCraft),
 
     ;
 

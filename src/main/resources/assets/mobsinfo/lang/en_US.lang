@@ -31,6 +31,8 @@ mobsinfo.mobhandlerinfernal.tooltip_chance=Total chance to get: %.4f%%
 mobsinfo.mobhandlerinfernal.tooltip_chance_always=Total chance to get when always infernal: %.4f%%
 
 #Extras (compatibility)
+mobsinfo.extras.minecraft_slime=Drops only when the slime is at the smallest size
+mobsinfo.extras.minecraft_magma_cube=Drops only when the magma cube is NOT at the smallest size
 mobsinfo.extras.chance=Chance: %.2f%%
 mobsinfo.extras.base_chance=Base chance: %.2f%%
 mobsinfo.extras.variable_chance=Variable chance

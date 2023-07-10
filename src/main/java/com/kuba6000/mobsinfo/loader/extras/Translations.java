@@ -6,6 +6,9 @@ import com.kuba6000.mobsinfo.api.helper.TranslationHelper;
 
 enum Translations {
 
+    MINECRAFT_SLIME,
+    MINECRAFT_MAGMA_CUBE,
+
     CHANCE,
     BASE_CHANCE,
     VARIABLE_CHANCE,
