@@ -97,8 +97,7 @@ public class EditMobDrops implements IExtraLoader {
             .filter(
                 c -> recipe.entity.getClass()
                     .equals(c.entityFrom))
-            .findAny()
-            .ifPresent(addedDrop -> {
+            .forEach(addedDrop -> {
                 ItemStack item = new ItemStack(addedDrop.item, 1, addedDrop.metadata);
                 MobDrop drop = new MobDrop(
                     item,

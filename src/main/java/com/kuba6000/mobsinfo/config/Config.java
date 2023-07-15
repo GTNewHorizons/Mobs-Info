@@ -120,6 +120,7 @@ public class Config {
     public static class Compatibility {
 
         public static boolean enableMobHandlerInfernal = true;
+        public static boolean addAllEnderIOSpawnersToNEI = false;
 
         private static void load(Configuration configuration) {
             Category category = Category.COMPATIBILITY;
@@ -129,6 +130,13 @@ public class Config {
                     "enableInfernalDrops",
                     true,
                     "Enables \"Infernal Drops\" NEI page if Infernal-Mobs mod is loaded.")
+                .getBoolean();
+            addAllEnderIOSpawnersToNEI = configuration
+                .get(
+                    category.get(),
+                    "addAllEnderIOSpawnersToNEI",
+                    false,
+                    "Adds all mob variants EnderIO powered spawners to NEI.")
                 .getBoolean();
         }
     }
@@ -151,6 +159,7 @@ public class Config {
 
         MobHandler.load(configuration);
         Debug.load(configuration);
+        Compatibility.load(configuration);
 
         if (configuration.hasChanged()) {
             configuration.save();

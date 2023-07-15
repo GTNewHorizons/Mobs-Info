@@ -20,9 +20,14 @@
 
 package com.kuba6000.mobsinfo.nei;
 
+import net.minecraft.item.Item;
+
 import com.kuba6000.mobsinfo.Tags;
 import com.kuba6000.mobsinfo.api.LoaderReference;
+import com.kuba6000.mobsinfo.api.MobRecipe;
+import com.kuba6000.mobsinfo.config.Config;
 
+import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 
 public class NEI_Config implements IConfigureNEI {
@@ -35,6 +40,14 @@ public class NEI_Config implements IConfigureNEI {
         new MobHandler();
         if (LoaderReference.InfernalMobs) new MobHandlerInfernal();
         isAdded = true;
+
+        if (LoaderReference.EnderIO && Config.Compatibility.addAllEnderIOSpawnersToNEI) {
+            for (String s : MobRecipe.MobNameToRecipeMap.keySet()) {
+                API.addItemVariant(
+                    Item.getItemFromBlock(EnderIOGetter.blockPoweredSpawner()),
+                    EnderIOGetter.BlockPoweredSpawner$createItemStackForMob(s));
+            }
+        }
     }
 
     @Override

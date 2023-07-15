@@ -28,6 +28,7 @@ public enum Mixin {
 
     // Ender IO
     ItemSoulVesselAccessor("EnderIO.ItemSoulVesselAccessor", ENDER_IO),
+    BlockPoweredSpawnerAccessor("EnderIO.BlockPoweredSpawnerAccessor", ENDER_IO),
 
     // Draconic Evolution
     MinecraftForgeEventHandlerAccessor("DraconicEvolution.MinecraftForgeEventHandlerAccessor", DRACONIC_EVOLUTION),

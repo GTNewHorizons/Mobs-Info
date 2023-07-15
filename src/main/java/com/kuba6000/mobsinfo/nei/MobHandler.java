@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -44,7 +43,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.MinecraftForge;
@@ -80,8 +78,6 @@ import codechicken.nei.recipe.IUsageHandler;
 import codechicken.nei.recipe.RecipeCatalysts;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import cpw.mods.fml.common.event.FMLInterModComms;
-import crazypants.enderio.EnderIO;
-import crazypants.enderio.machine.spawner.BlockPoweredSpawner;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.objects.ItemData;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -293,7 +289,10 @@ public class MobHandler extends TemplateRecipeHandler {
             // scaled = (int) Math.min(scaled, maxwidth / ewidth);
 
             int mobx = 30, moby = 50;
-            e.setPosition(mc.thePlayer.posX + 5, mc.thePlayer.posY, mc.thePlayer.posZ);
+            e.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+            e.lastTickPosX = e.posX;
+            e.lastTickPosY = e.posY;
+            e.lastTickPosZ = e.posZ;
 
             // ARGS: x, y, scale, rot, rot, entity
             GuiInventory.func_147046_a(
@@ -593,11 +592,7 @@ public class MobHandler extends TemplateRecipeHandler {
                 this.mInput.add(new ItemStack(Blocks.mob_spawner, 1, id));
             }
             if (LoaderReference.EnderIO) {
-                ItemStack s = new ItemStack(EnderIOGetter.blockPoweredSpawner(), 1);
-                NBTTagCompound nbt = new NBTTagCompound();
-                EnderIOGetter.BlockPoweredSpawner$writeMobTypeToNBT(nbt, mobname);
-                s.setTagCompound(nbt);
-                this.mInput.add(0, s);
+                this.mInput.add(0, EnderIOGetter.BlockPoweredSpawner$createItemStackForMob(mobname));
             } else if (id == 0) this.mInput.add(new ItemStack(Items.spawn_egg, 1, 0)); // ???
             ingredient = new PositionedStack(this.mInput.get(0), 38, 44, false);
             this.isUsableInVial = EnderIOHelper.canEntityBeCapturedWithSoulVial(mob, mobname);
@@ -627,17 +622,6 @@ public class MobHandler extends TemplateRecipeHandler {
         public List<PositionedStack> getOtherStacks() {
             if (cycleTicksStatic % 10 == 0) mOutputs.forEach(p -> p.setPermutationToRender(0));
             return mOutputs;
-        }
-    }
-
-    private static class EnderIOGetter {
-
-        public static Block blockPoweredSpawner() {
-            return EnderIO.blockPoweredSpawner;
-        }
-
-        public static void BlockPoweredSpawner$writeMobTypeToNBT(NBTTagCompound nbt, String type) {
-            BlockPoweredSpawner.writeMobTypeToNBT(nbt, type);
         }
     }
 
