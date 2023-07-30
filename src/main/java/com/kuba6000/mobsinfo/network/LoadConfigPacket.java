@@ -46,6 +46,7 @@ public class LoadConfigPacket implements IMessage {
         if (!buf.readBoolean()) mobsToLoad.clear();
         else {
             Config.Compatibility.enableMobHandlerInfernal = buf.readBoolean();
+            Config.MobHandler.hiddenMode = buf.readBoolean();
             mobsToLoad.clear();
             int mobssize = buf.readInt();
             for (int i = 0; i < mobssize; i++) {
@@ -68,6 +69,7 @@ public class LoadConfigPacket implements IMessage {
         else {
             buf.writeBoolean(true);
             buf.writeBoolean(Config.Compatibility.enableMobHandlerInfernal);
+            buf.writeBoolean(Config.MobHandler.hiddenMode);
             buf.writeInt(mobsToLoad.size());
             mobsToLoad.forEach(s -> {
                 byte[] sbytes = s.getBytes(StandardCharsets.UTF_8);

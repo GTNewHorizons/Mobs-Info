@@ -69,6 +69,7 @@ public class Config {
         public static _CacheRegenerationTrigger regenerationTrigger = _CacheRegenerationTrigger.ModAdditionRemovalChange;
         public static boolean includeEmptyMobs = true;
         public static String[] mobBlacklist;
+        public static boolean hiddenMode = false;
 
         private static void load(Configuration configuration) {
             Category category = Category.MOB_HANDLER;
@@ -103,17 +104,43 @@ public class Config {
                         "SpecialMobs.SpecialSilverfish", },
                     "These mobs will be skipped when generating recipe map")
                 .getStringList();
+            hiddenMode = configuration
+                .get(
+                    category.get(),
+                    "HiddenMode",
+                    false,
+                    "Hidden mode will make all mobs hidden in NEI until you kill them.")
+                .getBoolean();
         }
     }
 
     public static class Debug {
 
+        public enum LoggingLevel {
+
+            Basic,
+            Detailed;
+
+            public static LoggingLevel get(int oridinal) {
+                return values()[oridinal];
+            }
+        }
+
+        public static LoggingLevel loggingLevel = LoggingLevel.Basic;
         public static boolean showRenderErrors = false;
 
         private static void load(Configuration configuration) {
             Category category = Category.DEBUG;
             showRenderErrors = configuration.get(category.get(), "ShowRenderErrors", false)
                 .getBoolean();
+            loggingLevel = LoggingLevel.get(
+                configuration
+                    .get(
+                        category.get(),
+                        "LoggingLevel",
+                        0,
+                        "0 - Default, log only basic, summary information. 1 - More detailed logs")
+                    .getInt());
         }
     }
 

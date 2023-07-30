@@ -23,6 +23,8 @@ package com.kuba6000.mobsinfo;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import com.kuba6000.mobsinfo.network.LoadConfigPacket;
+import com.kuba6000.mobsinfo.network.SaveDataPacket;
+import com.kuba6000.mobsinfo.savedata.PlayerDataManager;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
@@ -30,10 +32,13 @@ import cpw.mods.fml.common.gameevent.PlayerEvent;
 public class FMLEventHandler {
 
     // Gets fired only server-sided
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.player instanceof EntityPlayerMP)) return;
         MobsInfo.info("Sending config to " + event.player.getDisplayName());
         MobsInfo.NETWORK.sendTo(LoadConfigPacket.instance, (EntityPlayerMP) event.player);
+        MobsInfo.NETWORK
+            .sendTo(new SaveDataPacket(PlayerDataManager.getPlayer(event.player)), (EntityPlayerMP) event.player);
     }
 }

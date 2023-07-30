@@ -51,7 +51,7 @@ public class DraconicEvolution implements IExtraLoader {
 
         ItemStack soul = new ItemStack(ModItems.mobSoul);
         soul.stackTagCompound = new NBTTagCompound();
-        soul.stackTagCompound.setString("Name", k);
+        soul.stackTagCompound.setString("Name", k.equals("witherSkeleton") ? "Skeleton" : k);
         if (recipe.entity instanceof EntitySkeleton)
             soul.stackTagCompound.setInteger("SkeletonType", ((EntitySkeleton) recipe.entity).getSkeletonType());
 

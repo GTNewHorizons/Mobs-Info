@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.kuba6000.mobsinfo.network.LoadConfigPacket;
+import com.kuba6000.mobsinfo.network.SaveDataPacket;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -51,6 +52,7 @@ public class MobsInfo {
 
     static {
         NETWORK.registerMessage(new LoadConfigPacket.Handler(), LoadConfigPacket.class, 0, Side.CLIENT);
+        NETWORK.registerMessage(new SaveDataPacket.Handler(), SaveDataPacket.class, 1, Side.CLIENT);
     }
 
     private static final Logger LOG = LogManager.getLogger(Tags.MODID);

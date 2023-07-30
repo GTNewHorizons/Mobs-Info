@@ -613,7 +613,8 @@ public class MobRecipeLoader {
             if (v == null) return;
 
             if (Modifier.isAbstract(v.getModifiers())) {
-                LOG.info("Entity " + k + " is abstract, skipping");
+                if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed)
+                    LOG.info("Entity " + k + " is abstract, skipping");
                 return;
             }
 
@@ -623,15 +624,18 @@ public class MobRecipeLoader {
                     .newInstance(new Object[] { f });
             } catch (ClassCastException ex) {
                 // not a EntityLiving
-                LOG.info("Entity " + k + " is not a LivingEntity, skipping");
+                if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed)
+                    LOG.info("Entity " + k + " is not a LivingEntity, skipping");
                 return;
             } catch (NoSuchMethodException ex) {
                 // No constructor ?
-                LOG.info("Entity " + k + " doesn't have constructor, skipping");
+                if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed)
+                    LOG.info("Entity " + k + " doesn't have constructor, skipping");
                 return;
             } catch (NoClassDefFoundError ex) {
                 // Its using classes from Client ? Then it's not important to include
-                LOG.info("Entity " + k + " is using undefined classes, skipping");
+                if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed)
+                    LOG.info("Entity " + k + " is using undefined classes, skipping");
                 return;
             } catch (Throwable ex) {
                 ex.printStackTrace();
@@ -888,7 +892,7 @@ public class MobRecipeLoader {
                 if (drops.isEmpty() && raredrops.isEmpty() && additionaldrops.isEmpty()) {
                     ArrayList<MobDrop> arr = new ArrayList<>();
                     GeneralMobList.put(k, new GeneralMappedMob(e, MobRecipe.generateMobRecipe(e, k, arr), arr));
-                    LOG.info("Mapped " + k);
+                    if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed) LOG.info("Mapped " + k);
                     return;
                 }
 
@@ -977,7 +981,7 @@ public class MobRecipeLoader {
                 GeneralMobList
                     .put(k, new GeneralMappedMob(e, MobRecipe.generateMobRecipe(e, k, moboutputs), moboutputs));
 
-                LOG.info("Mapped " + k);
+                if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed) LOG.info("Mapped " + k);
             } catch (Exception ex) {
                 LOG.error("Something went wrong while generating recipes for " + k + ", stacktrace: ");
                 ex.printStackTrace();
@@ -989,7 +993,7 @@ public class MobRecipeLoader {
         time -= System.currentTimeMillis();
         time = -time;
 
-        LOG.info("Recipe map generated ! It took " + time + "ms");
+        LOG.info("Recipe map generated! Mapped " + GeneralMobList.size() + " entities! It took " + time + "ms");
 
         bar.end();
 
@@ -1166,7 +1170,8 @@ public class MobRecipeLoader {
             GeneralMappedMob v = entry.getValue();
             if (Arrays.asList(Config.MobHandler.mobBlacklist)
                 .contains(k)) {
-                LOG.info("Entity " + k + " is blacklisted, skipping");
+                if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed)
+                    LOG.info("Entity " + k + " is blacklisted, skipping");
                 continue;
             }
 
@@ -1197,16 +1202,16 @@ public class MobRecipeLoader {
             recipe.refresh();
 
             if (drops.isEmpty()) {
-                LOG.info("Entity " + k + " doesn't drop any items");
+                if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed)
+                    LOG.info("Entity " + k + " doesn't drop any items");
                 if (!Config.MobHandler.includeEmptyMobs) continue;
-                LoadConfigPacket.instance.mobsToLoad.add(k);
-                LOG.info("Registered " + k);
-                continue;
             }
             MobNameToRecipeMap.put(k, recipe);
             LoadConfigPacket.instance.mobsToLoad.add(k);
-            LOG.info("Registered " + k);
+            if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed) LOG.info("Registered " + k);
         }
+
+        LOG.info("Registered " + MobNameToRecipeMap.size() + " entities!");
 
         MinecraftForge.EVENT_BUS.post(new PostMobsRegistrationEvent());
     }
@@ -1251,9 +1256,10 @@ public class MobRecipeLoader {
 
             MobHandler.addRecipe(v.mob, drops);
             MobNameToRecipeMap.put(k, recipe);
-            LOG.info("Registered " + k);
+            if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed) LOG.info("Registered " + k);
         });
         MinecraftForge.EVENT_BUS.post(new PostMobsRegistrationEvent());
+        LOG.info("Registered " + MobNameToRecipeMap.size() + " entities!");
         LOG.info("Sorting NEI map");
         MobHandler.sortCachedRecipes();
     }

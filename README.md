@@ -22,12 +22,48 @@ These informations includes:
   - Rare drops
   - Additional drops (armor, equipment)
 
+![1](https://github.com/kuba6000/Mobs-Info/assets/53441451/771b0adc-8b4d-450c-b7c5-2c2bd6b0b3fd)
+
+## Hidden mode
+
+You can turn hidden mode on in the configuration file located in `/config/mobsinfo/mobsinfo.cfg`.
+Hidden mode will make all mobs hidden in NEI until you kill them.
 <details>
   <summary>Screenshots in game</summary>
   
-  ![1](https://github.com/kuba6000/Mobs-Info/assets/53441451/771b0adc-8b4d-450c-b7c5-2c2bd6b0b3fd)
+  ![image](https://github.com/kuba6000/Mobs-Info/assets/53441451/165b8b65-4fda-4084-8e28-ea86c3c086e4)
   
 </details>
+
+## Compatibility
+
+This mod is compatible with many mods including:
+- Edit Mob Drops
+- MineTweaker
+- Ender IO
+- Infernal Mobs
+- And many others...
+
+<details>
+  <summary>Screenshots in game</summary>
+  
+  ![image](https://github.com/kuba6000/Mobs-Info/assets/53441451/8f7e3b5c-2085-4512-b753-1894a28bf986)
+  ![image](https://github.com/kuba6000/Mobs-Info/assets/53441451/765a72c2-6e73-4621-99e9-bc10b50f22c2)
+  ![image](https://github.com/kuba6000/Mobs-Info/assets/53441451/21ea707f-5d5b-4180-bfb6-7f825c4cb563)
+  
+</details>
+
+If you find any mod that adds its own drops to the game and they don't show in NEI then feel free to open an issue!
+
+## Configuration
+
+There are two configuration files `mobsinfo.cfg` and `MobOverrides.json` in `/config/mobsinfo/` directory that should generate at first launch.
+There will also be third file called `MobRecipeLoader.cache` but it is to make your game start faster next time, so dont edit it!
+You can turn various features on and off in there including:
+- Hidden mode
+- Infernal drops NEI page
+- Show all EnderIO spawners in NEI!
+- Mob blacklist
 
 ## Override Config
 Sometimes there are cases where it is impossible to generate loot that the mob gives.
@@ -36,7 +72,6 @@ In this cases you can manually edit the information on the page with the overrid
 You can find it in .minecraft\config\MobsInfo\MobOverrides.json
 
 Example file should generate at first start
-
 
 ## License
 
