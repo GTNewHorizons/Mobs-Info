@@ -501,7 +501,8 @@ public class MobHandler extends TemplateRecipeHandler {
         if (LoaderReference.EnderIO) {
             Item item = ingredient.getItem();
             if (item == Item.getItemFromBlock(EnderIOGetter.blockPoweredSpawner())
-                || item == EnderIOGetter.itemSoulVessel()) {
+                || item == EnderIOGetter.itemSoulVessel()
+                || item == EnderIOGetter.itemBrokenSpawner()) {
                 String mobType = EnderIOGetter.getContainedMobOrNull(ingredient);
                 if (mobType == null) {
                     loadCraftingRecipes(getOverlayIdentifier(), (Object) null);
@@ -519,7 +520,8 @@ public class MobHandler extends TemplateRecipeHandler {
         if (LoaderReference.EnderIO) {
             Item item = ingredient.getItem();
             if (item == Item.getItemFromBlock(EnderIOGetter.blockPoweredSpawner())
-                || item == EnderIOGetter.itemSoulVessel()) {
+                || item == EnderIOGetter.itemSoulVessel()
+                || item == EnderIOGetter.itemBrokenSpawner()) {
                 String mobType = EnderIOGetter.getContainedMobOrNull(ingredient);
                 if (mobType == null) return false;
                 for (MobCachedRecipe r : cachedRecipes) if (r.mobname.equals(mobType)) return r.infernaltype > 0;
@@ -671,6 +673,7 @@ public class MobHandler extends TemplateRecipeHandler {
             if (LoaderReference.EnderIO) {
                 this.mInput.add(0, EnderIOGetter.BlockPoweredSpawner$createItemStackForMob(mobname));
                 this.mInput.add(1, EnderIOGetter.ItemSoulVessel$createVesselWithEntityStub(mobname));
+                this.mInput.add(2, EnderIOGetter.ItemBrokenSpawner$createStackForMobType(mobname));
             } // else if (id == 0) this.mInput.add(new ItemStack(Items.spawn_egg, 1, 0)); // ???
             if (!this.mInput.isEmpty()) ingredient = new PositionedStack(this.mInput, 38, 44, true);
             else ingredient = null;
