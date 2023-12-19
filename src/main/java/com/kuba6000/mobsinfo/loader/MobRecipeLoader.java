@@ -58,7 +58,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -677,9 +676,9 @@ public class MobRecipeLoader {
                 return;
             }
 
-            if (!(registeringWitherSkeleton && k.equals("witherSkeleton"))
-                && !StatCollector.canTranslate("entity." + k + ".name")) {
-                LOG.warn("Entity " + k + " does't have localized name!");
+            if (!(registeringWitherSkeleton && k.equals("witherSkeleton")) && e.getCommandSenderName()
+                .startsWith("entity.")) {
+                LOG.warn("Entity " + k + " doesn't have localized name!");
                 // return;
             }
 

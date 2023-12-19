@@ -662,9 +662,8 @@ public class MobHandler extends TemplateRecipeHandler {
             // noinspection ConstantConditions
             localizedName = mobname.equals("Skeleton") && ((EntitySkeleton) mob).getSkeletonType() == 1
                 ? "Wither Skeleton"
-                : (StatCollector.canTranslate("entity." + mobname + ".name")
-                    ? StatCollector.translateToLocal("entity." + mobname + ".name")
-                    : mobname);
+                : (!mob.getCommandSenderName()
+                    .startsWith("entity.") ? mob.getCommandSenderName() : mobname);
             if (id != 0) {
                 this.mInput.add(new ItemStack(Items.spawn_egg, 1, id));
                 this.mInput.add(new ItemStack(Blocks.mob_spawner, 1, id));
