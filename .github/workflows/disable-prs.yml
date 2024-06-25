@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close pull
-        run: gh pr close ${{ github.event.pull_request.html_url }} --comment "<h1>Mobs Info 1.7.10 FORK</h1> <h2> Please open any mod-related PRs <a href='https://github.com/kuba6000/Mobs-Info'>upstream</a>. <br> If you want to change something GTNH-specific please try to do it in the configs or <a href='https://github.com/GTNewHorizons/KubaTech/blob/master/src/main/java/kubatech/loaders/MobHandlerLoader.java'>KubaTech</a>. </h2>"
+        run: gh pr close ${{ github.event.pull_request.html_url }} --comment "<h1>Mobs Info 1.7.10 FORK</h1> <h2> Please open any mod-related PRs <a href='https://github.com/kuba6000/Mobs-Info'>upstream</a>. <br> If you want to change something GTNH-specific please try to do it in the configs or <a href='https://github.com/GTNewHorizons/GT5-Unofficial/blob/master/src/main/java/kubatech/loaders/MobHandlerLoader.java'>KubaTech</a>. </h2>"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
