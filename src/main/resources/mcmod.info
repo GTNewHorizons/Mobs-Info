@@ -12,10 +12,6 @@
 		"credits": "",
 		"logoFile": "assets/mobsinfo/textures/gui/logo.png",
 		"screenshots": [],
-		"parent": "",
-		"requiredMods": [],
-		"dependencies": [],
-		"dependants": [],
-		"useDependencyInformation": true
+		"parent": ""
 	}]
 }
