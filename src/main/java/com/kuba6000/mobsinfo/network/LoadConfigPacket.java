@@ -28,6 +28,7 @@ import com.kuba6000.mobsinfo.MobsInfo;
 import com.kuba6000.mobsinfo.api.MobOverride;
 import com.kuba6000.mobsinfo.config.Config;
 import com.kuba6000.mobsinfo.loader.MobRecipeLoader;
+import com.kuba6000.mobsinfo.loader.VillagerTradesLoader;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -40,6 +41,8 @@ public class LoadConfigPacket implements IMessage {
 
     public final HashSet<String> mobsToLoad = new HashSet<>();
     public final HashMap<String, MobOverride> mobsOverrides = new HashMap<>();
+
+    public final HashSet<Integer> villagersToLoad = new HashSet<>();
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -59,6 +62,14 @@ public class LoadConfigPacket implements IMessage {
                 byte[] sbytes = new byte[buf.readInt()];
                 buf.readBytes(sbytes);
                 mobsOverrides.put(new String(sbytes, StandardCharsets.UTF_8), MobOverride.readFromByteBuf(buf));
+            }
+        }
+        if (!buf.readBoolean()) villagersToLoad.clear();
+        else {
+            int villagerSize = buf.readInt();
+            villagersToLoad.clear();
+            for (int i = 0; i < villagerSize; i++) {
+                villagersToLoad.add(buf.readInt());
             }
         }
     }
@@ -84,14 +95,21 @@ public class LoadConfigPacket implements IMessage {
                 v.writeToByteBuf(buf);
             });
         }
+        if (!Config.VillagerTradesHandler.enabled) buf.writeBoolean(false);
+        else {
+            buf.writeBoolean(true);
+            buf.writeInt(villagersToLoad.size());
+            villagersToLoad.forEach(buf::writeInt);
+        }
     }
 
     public static class Handler implements IMessageHandler<LoadConfigPacket, IMessage> {
 
         @Override
         public IMessage onMessage(LoadConfigPacket message, MessageContext ctx) {
-            MobsInfo.info("Received Mob Handler config, parsing");
+            MobsInfo.info("Received Mobs-Info config, parsing");
             MobRecipeLoader.processMobRecipeMap(message.mobsToLoad, message.mobsOverrides);
+            VillagerTradesLoader.processVillagerTrades(message.villagersToLoad);
             return null;
         }
     }

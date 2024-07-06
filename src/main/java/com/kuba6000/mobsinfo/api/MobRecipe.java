@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
@@ -27,6 +28,13 @@ import com.kuba6000.mobsinfo.loader.MobRecipeLoader;
 import com.kuba6000.mobsinfo.mixin.InfernalMobs.InfernalMobsCoreAccessor;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import jas.spawner.modern.MVELProfile;
+import jas.spawner.modern.spawner.biome.group.BiomeHelper;
+import jas.spawner.modern.spawner.biome.structure.StructureHandler;
+import jas.spawner.modern.spawner.biome.structure.StructureHandlerRegistry;
+import jas.spawner.modern.spawner.creature.entry.BiomeSpawnListRegistry;
+import jas.spawner.modern.spawner.creature.entry.SpawnListEntry;
+import jas.spawner.modern.spawner.creature.handler.LivingHandler;
 
 public class MobRecipe {
 
@@ -40,7 +48,7 @@ public class MobRecipe {
     public final float maxEntityHealth;
     public final boolean isUsableInVial;
     public final String entityName;
-    public final HashSet<SpawnInfo> spawnList;
+    public HashSet<SpawnInfo> spawnList;
 
     @SuppressWarnings("unchecked")
     public MobRecipe copy() {
@@ -102,10 +110,67 @@ public class MobRecipe {
         entity = e;
         isUsableInVial = EnderIOHelper.canEntityBeCapturedWithSoulVial(e, entityID);
         entityName = entityID;
+    }
 
+    public void generateSpawnList() {
         if (MobNameToBiomeSpawnList == null) {
             MobNameToBiomeSpawnList = new HashMap<>();
+            MobNameToStructureList = new HashMap<>();
             BiomeGenBase[] biomeList = BiomeGenBase.getBiomeGenArray();
+            // JustAnotherSpawner.globalSettings().emptyVanillaSpawnLists
+            if (LoaderReference.JustAnotherSpawner) {
+                BiomeSpawnListRegistry biomeSpawnListRegistry = MVELProfile.worldSettings()
+                    .biomeSpawnListRegistry();
+                for (BiomeGenBase biome : biomeList) {
+                    if (biome == null) continue;
+                    new SpawnInfo.SpawnInfoBiome(biome);
+                    for (SpawnListEntry spawnListEntry : biomeSpawnListRegistry
+                        .getSpawnListFor(BiomeHelper.getPackageName(biome))) {
+                        LivingHandler handler = spawnListEntry.getLivingHandler();
+                        if (!handler.namedJASSpawnables.isEmpty()) {
+                            for (String namedJASSpawnable : handler.namedJASSpawnables) {
+                                Class<? extends Entity> entityClass = biomeSpawnListRegistry.livingGroupRegistry
+                                    .jasNametoEntityClass()
+                                    .get(namedJASSpawnable);
+                                if (entityClass != null) MobNameToBiomeSpawnList
+                                    .computeIfAbsent(
+                                        EntityList.classToStringMapping.get(entityClass),
+                                        s -> new ArrayList<>())
+                                    .add(Pair.of(biome, null));
+                            }
+
+                        }
+                    }
+                }
+                StructureHandlerRegistry registry = MVELProfile.worldSettings()
+                    .structureHandlerRegistry();
+                for (StructureHandler registryhandler : registry.handlers()) {
+                    for (String structureKey : registryhandler.getStructureKeys()) {
+                        new SpawnInfo.SpawnInfoStructure(structureKey);
+                        for (SpawnListEntry spawnListEntry : registryhandler.getStructureSpawnList(structureKey)) {
+                            LivingHandler handler = spawnListEntry.getLivingHandler();
+                            if (!handler.namedJASSpawnables.isEmpty()) {
+                                for (String namedJASSpawnable : handler.namedJASSpawnables) {
+                                    Class<? extends Entity> entityClass = MVELProfile.worldSettings()
+                                        .livingGroupRegistry()
+                                        .jasNametoEntityClass()
+                                        .get(namedJASSpawnable);
+                                    if (entityClass != null) MobNameToStructureList
+                                        .computeIfAbsent(
+                                            EntityList.classToStringMapping.get(entityClass),
+                                            s -> new ArrayList<>())
+                                        .add(structureKey);
+                                }
+
+                            }
+                        }
+                    }
+                }
+                //
+                // MVELProfile.worldSettings().eventSpawnRegistry().getEventsForTrigger()
+            }
+
+            // vanilla
             for (BiomeGenBase biome : biomeList) {
                 if (biome == null) continue;
                 // make sure to create known place
@@ -116,7 +181,7 @@ public class MobRecipe {
                     if (spawnableList != null) for (BiomeGenBase.SpawnListEntry entry : spawnableList) {
                         MobNameToBiomeSpawnList
                             .computeIfAbsent(
-                                (String) EntityList.classToStringMapping.get(entry.entityClass),
+                                EntityList.classToStringMapping.get(entry.entityClass),
                                 s -> new ArrayList<>())
                             .add(Pair.of(biome, entry));
                     }
@@ -124,13 +189,20 @@ public class MobRecipe {
             }
         }
 
-        ArrayList<Pair<BiomeGenBase, BiomeGenBase.SpawnListEntry>> ar = MobNameToBiomeSpawnList.get(entityID);
+        ArrayList<Pair<BiomeGenBase, BiomeGenBase.SpawnListEntry>> ar = MobNameToBiomeSpawnList.get(this.entityName);
         spawnList = new HashSet<>();
         if (ar != null) {
             for (Pair<BiomeGenBase, BiomeGenBase.SpawnListEntry> entry : ar) {
                 spawnList.add(new SpawnInfo.SpawnInfoBiome(entry.getKey()));
             }
         }
+        ArrayList<String> structs = MobNameToStructureList.get(this.entityName);
+        if (structs != null) {
+            for (String struct : structs) {
+                spawnList.add(new SpawnInfo.SpawnInfoStructure(struct));
+            }
+        }
+
     }
 
     public void refresh() {
@@ -221,6 +293,7 @@ public class MobRecipe {
 
     public static HashMap<String, MobRecipe> MobNameToRecipeMap = new HashMap<>();
     public static HashMap<String, ArrayList<Pair<BiomeGenBase, BiomeGenBase.SpawnListEntry>>> MobNameToBiomeSpawnList = null;
+    public static HashMap<String, ArrayList<String>> MobNameToStructureList = null;
 
     public static MobRecipe getRecipeByEntityName(String mobName) {
         return MobNameToRecipeMap.get(mobName);

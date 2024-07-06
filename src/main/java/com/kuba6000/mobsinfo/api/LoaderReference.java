@@ -37,5 +37,6 @@ public class LoaderReference {
     public static final boolean ExtraUtilities = Loader.isModLoaded("ExtraUtilities");
     public static final boolean EtFuturumRequiem = Loader.isModLoaded("etfuturum");
     public static final boolean LycanitesMobs = Loader.isModLoaded("lycanitesmobs");
+    public static final boolean JustAnotherSpawner = Loader.isModLoaded("JustAnotherSpawner");
 
 }

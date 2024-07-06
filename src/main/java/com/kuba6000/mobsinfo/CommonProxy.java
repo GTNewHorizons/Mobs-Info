@@ -25,6 +25,7 @@ import net.minecraftforge.common.MinecraftForge;
 import com.kuba6000.mobsinfo.command.CommandHandler;
 import com.kuba6000.mobsinfo.config.Config;
 import com.kuba6000.mobsinfo.loader.MobRecipeLoader;
+import com.kuba6000.mobsinfo.loader.VillagerTradesLoader;
 import com.kuba6000.mobsinfo.savedata.PlayerDataManager;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -63,6 +64,9 @@ public class CommonProxy {
     public void serverStarting(FMLServerStartingEvent event) {
         MobRecipeLoader.generateMobRecipeMap();
         MobRecipeLoader.processMobRecipeMap();
+
+        VillagerTradesLoader.generateVillagerTrades();
+        VillagerTradesLoader.processVillagerTrades();
 
         CommandHandler cmd = new CommandHandler();
         event.registerServerCommand(cmd);

@@ -31,6 +31,7 @@ public class Config {
     private enum Category {
 
         MOB_HANDLER("MobHandler"),
+        VILLAGER_TRADES_HANDLER("VillagerTradesHandler"),
         DEBUG("Debug"),
         COMPATIBILITY("Compatibility");
 
@@ -130,6 +131,18 @@ public class Config {
         }
     }
 
+    public static class VillagerTradesHandler {
+
+        public static boolean enabled = true;
+
+        private static void load(Configuration configuration) {
+            Category category = Category.VILLAGER_TRADES_HANDLER;
+
+            enabled = configuration.get(category.get(), "Enabled", true, "Show villager trades in NEI")
+                .getBoolean();
+        }
+    }
+
     public static class Debug {
 
         public enum LoggingLevel {
@@ -201,6 +214,7 @@ public class Config {
         configuration.load();
 
         MobHandler.load(configuration);
+        VillagerTradesHandler.load(configuration);
         Debug.load(configuration);
         Compatibility.load(configuration);
 

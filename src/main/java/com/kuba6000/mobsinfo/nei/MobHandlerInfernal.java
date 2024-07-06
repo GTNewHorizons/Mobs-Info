@@ -4,6 +4,7 @@ import static com.kuba6000.mobsinfo.config.Config.Compatibility.enableMobHandler
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -18,6 +19,8 @@ import com.kuba6000.mobsinfo.MobsInfo;
 import com.kuba6000.mobsinfo.api.helper.TranslationHelper;
 import com.kuba6000.mobsinfo.api.utils.FastRandom;
 import com.kuba6000.mobsinfo.mixin.InfernalMobs.InfernalMobsCoreAccessor;
+import com.kuba6000.mobsinfo.nei.scrollable.IScrollableGUI;
+import com.kuba6000.mobsinfo.nei.scrollable.Scrollbar;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 import codechicken.lib.gui.GuiDraw;
@@ -30,7 +33,7 @@ import codechicken.nei.recipe.RecipeCatalysts;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
-public class MobHandlerInfernal extends TemplateRecipeHandler {
+public class MobHandlerInfernal extends TemplateRecipeHandler implements IScrollableGUI {
 
     enum Translations {
 
@@ -77,6 +80,8 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
     private static final int itemsPerRow = 8, itemXShift = 18, itemYShift = 18, nextRowYShift = 35, itemsYStart = 80;
     public static int cycleTicksStatic = Math.abs((int) System.currentTimeMillis());
 
+    private final Scrollbar scrollbar;
+
     public MobHandlerInfernal() {
         if (!NEI_Config.isAdded) {
             FMLInterModComms.sendRuntimeMessage(
@@ -90,6 +95,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
         if (recipe == null) {
             recipe = new InfernalRecipe();
         }
+        this.scrollbar = new Scrollbar(this, 0, itemsYStart);
     }
 
     @Override
@@ -157,8 +163,9 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
     public void drawBackground(int recipeID) {
         GL11.glColor4f(1f, 1f, 1f, 1f);
         GuiDraw.changeTexture(getGuiTexture());
-        GuiDraw.drawTexturedModalRect(0, 0, 0, 0, 168, 192);
+        GuiDraw.drawTexturedModalRect(0, 0, 0, 0, 168, 166);
 
+        scrollbar.beginBackground(recipeID);
         {
             int x = 6, y = itemsYStart + 11, yshift = nextRowYShift;
             if (recipe.eliteCount > 0) {
@@ -180,8 +187,11 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
                     GuiDraw.drawTexturedModalRect(x, y + (18 * i), 0, 192, 144, 18);
                     if (i > 0) GuiDraw.drawTexturedModalRect(x, y + ((18 * i) - 1), 0, 193, 144, 2);
                 }
+                y += yshift + ((recipe.ultraCount - 1) / itemsPerRow) * 18;
             }
+            scrollbar.reportMaxContentDrawn(y);
         }
+        scrollbar.endBackground(recipeID);
 
     }
 
@@ -196,32 +206,36 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
         GuiDraw.drawString(Translations.FORMAT_3.get(), x, y += yshift, 0xFF555555, false);
         GuiDraw.drawString(Translations.FORMAT_4.get(), x + 20, y += yshift, 0xFF555555, false);
 
-        x = 6;
-        y = itemsYStart;
-        yshift = nextRowYShift;
-        if (recipe.eliteCount > 0) {
-            GuiDraw.drawString(Translations.ELITE.get(recipe.eliteChance * 100d, 100d), x, y, 0xFF555555, false);
-            y += yshift + ((recipe.eliteCount - 1) / itemsPerRow) * 18;
+        scrollbar.beginForeground(recipeID);
+        {
+            x = 6;
+            y = itemsYStart;
+            yshift = nextRowYShift;
+            if (recipe.eliteCount > 0) {
+                GuiDraw.drawString(Translations.ELITE.get(recipe.eliteChance * 100d, 100d), x, y, 0xFF555555, false);
+                y += yshift + ((recipe.eliteCount - 1) / itemsPerRow) * 18;
+            }
+            if (recipe.ultraCount > 0) {
+                GuiDraw.drawString(
+                    Translations.ULTRA.get(recipe.ultraChance * recipe.eliteChance * 100d, recipe.ultraChance * 100d),
+                    x,
+                    y,
+                    0xFF555555,
+                    false);
+                y += yshift + ((recipe.ultraCount - 1) / itemsPerRow) * 18;
+            }
+            if (recipe.infernoCount > 0) {
+                GuiDraw.drawString(
+                    Translations.INFERNO.get(
+                        recipe.infernoChance * recipe.ultraChance * recipe.eliteChance * 100d,
+                        recipe.infernoChance * recipe.ultraChance * 100d),
+                    x,
+                    y,
+                    0xFF555555,
+                    false);
+            }
         }
-        if (recipe.ultraCount > 0) {
-            GuiDraw.drawString(
-                Translations.ULTRA.get(recipe.ultraChance * recipe.eliteChance * 100d, recipe.ultraChance * 100d),
-                x,
-                y,
-                0xFF555555,
-                false);
-            y += yshift + ((recipe.ultraCount - 1) / itemsPerRow) * 18;
-        }
-        if (recipe.infernoCount > 0) {
-            GuiDraw.drawString(
-                Translations.INFERNO.get(
-                    recipe.infernoChance * recipe.ultraChance * recipe.eliteChance * 100d,
-                    recipe.infernoChance * recipe.ultraChance * 100d),
-                x,
-                y,
-                0xFF555555,
-                false);
-        }
+        scrollbar.endForeground(recipeID);
     }
 
     @Override
@@ -232,6 +246,22 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
             .orElse(null);
         if (pstack != null) pstack.handleTooltip(currenttip);
         return currenttip;
+    }
+
+    @Override
+    public boolean mouseScrolled(GuiRecipe<?> gui, int scroll, int recipe) {
+        if (super.mouseScrolled(gui, scroll, recipe)) return true;
+        return scrollbar.mouseScrolled(gui, scroll, recipe);
+    }
+
+    @Override
+    public Scrollbar getScrollbar() {
+        return scrollbar;
+    }
+
+    @Override
+    public List<PositionedStack> getAllItems(int recipe) {
+        return ((InfernalRecipe) arecipes.get(recipe)).getOutputs();
     }
 
     private static class InfernalPositionedStack extends PositionedStack {
@@ -374,10 +404,17 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
             return null;
         }
 
+        public void onUpdate() {
+            if (cycleTicksStatic % 10 == 0) all.forEach(p -> p.setPermutationToRender(0));
+        }
+
+        public List<PositionedStack> getOutputs() {
+            return all;
+        }
+
         @Override
         public List<PositionedStack> getOtherStacks() {
-            if (cycleTicksStatic % 10 == 0) all.forEach(p -> p.setPermutationToRender(0));
-            return all;
+            return Collections.emptyList();
         }
     }
 }

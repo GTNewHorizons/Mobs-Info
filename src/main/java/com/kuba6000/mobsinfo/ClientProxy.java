@@ -22,6 +22,7 @@ package com.kuba6000.mobsinfo;
 
 import com.kuba6000.mobsinfo.api.utils.ModUtils;
 import com.kuba6000.mobsinfo.loader.MobRecipeLoader;
+import com.kuba6000.mobsinfo.loader.VillagerTradesLoader;
 import com.kuba6000.mobsinfo.nei.IMCForNEI;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -58,6 +59,7 @@ public class ClientProxy extends CommonProxy {
     public void loadComplete(FMLLoadCompleteEvent event) {
         super.loadComplete(event);
         MobRecipeLoader.generateMobRecipeMap();
+        VillagerTradesLoader.generateVillagerTrades();
     }
 
     @Override

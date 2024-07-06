@@ -38,12 +38,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -52,23 +49,11 @@ import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.profiler.Profiler;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.WorldSettings;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.chunk.storage.IChunkLoader;
-import net.minecraft.world.storage.IPlayerFileData;
-import net.minecraft.world.storage.ISaveHandler;
-import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
@@ -78,12 +63,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import com.kuba6000.mobsinfo.api.DummyWorld;
 import com.kuba6000.mobsinfo.api.IChanceModifier;
 import com.kuba6000.mobsinfo.api.LoaderReference;
 import com.kuba6000.mobsinfo.api.MobDrop;
 import com.kuba6000.mobsinfo.api.MobDropSimplified;
 import com.kuba6000.mobsinfo.api.MobOverride;
 import com.kuba6000.mobsinfo.api.MobRecipe;
+import com.kuba6000.mobsinfo.api.RandomSequencer;
 import com.kuba6000.mobsinfo.api.event.PostMobRegistrationEvent;
 import com.kuba6000.mobsinfo.api.event.PostMobsRegistrationEvent;
 import com.kuba6000.mobsinfo.api.event.PreMobRegistrationEvent;
@@ -123,113 +110,6 @@ public class MobRecipeLoader {
     public static final String randomEnchantmentDetectedString = "RandomEnchantmentDetected";
     // This is in nanoseconds
     private static final long GET_DROPS_TIMEOUT = (long) (Config.MobHandler.mobTimeout * 1e9);
-
-    public static class fakeRand extends Random {
-
-        private static final long serialVersionUID = 109358312784613473L;
-
-        private static class nexter {
-
-            private final int bound;
-            private int next;
-
-            public nexter(int type, int bound) {
-                this.next = 0;
-                this.bound = bound;
-            }
-
-            private boolean getBoolean() {
-                return next == 1;
-            }
-
-            private int getInt() {
-                return next;
-            }
-
-            private float getFloat() {
-                return next * 0.1f;
-            }
-
-            private boolean next() {
-                next++;
-                return next >= bound;
-            }
-        }
-
-        private final ArrayList<nexter> nexts = new ArrayList<>();
-        private int walkCounter = 0;
-        private double chance;
-        private boolean exceptionOnEnchantTry = false;
-        private int maxWalkCount = -1;
-        private float forceFloatValue = -1.f;
-
-        @Override
-        public int nextInt(int bound) {
-            if (exceptionOnEnchantTry && bound == Enchantment.enchantmentsBookList.length) return -1;
-            if (nexts.size() <= walkCounter) { // new call
-                if (maxWalkCount == walkCounter) {
-                    return 0;
-                }
-                nexts.add(new nexter(0, bound));
-                walkCounter++;
-                chance /= bound;
-                return 0;
-            }
-            chance /= bound;
-            return nexts.get(walkCounter++)
-                .getInt();
-        }
-
-        @Override
-        public float nextFloat() {
-            if (forceFloatValue != -1f) return forceFloatValue;
-            if (nexts.size() <= walkCounter) { // new call
-                if (maxWalkCount == walkCounter) {
-                    return 0f;
-                }
-                nexts.add(new nexter(2, 10));
-                walkCounter++;
-                chance /= 10;
-                return 0f;
-            }
-            chance /= 10;
-            return nexts.get(walkCounter++)
-                .getFloat();
-        }
-
-        @Override
-        public boolean nextBoolean() {
-            if (nexts.size() <= walkCounter) { // new call
-                if (maxWalkCount == walkCounter) {
-                    return false;
-                }
-                nexts.add(new nexter(1, 2));
-                walkCounter++;
-                chance /= 2;
-                return false;
-            }
-            chance /= 2;
-            return nexts.get(walkCounter++)
-                .getBoolean();
-        }
-
-        public void newRound() {
-            walkCounter = 0;
-            nexts.clear();
-            chance = 1d;
-            maxWalkCount = -1;
-            exceptionOnEnchantTry = false;
-            forceFloatValue = -1f;
-        }
-
-        public boolean nextRound() {
-            walkCounter = 0;
-            chance = 1d;
-            while (!nexts.isEmpty() && nexts.get(nexts.size() - 1)
-                .next()) nexts.remove(nexts.size() - 1);
-            return !nexts.isEmpty();
-        }
-    }
 
     public static class dropinstance {
 
@@ -428,134 +308,7 @@ public class MobRecipeLoader {
         alreadyGenerated = true;
         if (!Config.MobHandler.mobHandlerEnabled) return;
 
-        World f = new World(new ISaveHandler() {
-
-            @Override
-            public void saveWorldInfoWithPlayer(WorldInfo worldInfo, NBTTagCompound nbtTagCompound) {}
-
-            @Override
-            public void saveWorldInfo(WorldInfo worldInfo) {}
-
-            @Override
-            public WorldInfo loadWorldInfo() {
-                return null;
-            }
-
-            @Override
-            public IPlayerFileData getSaveHandler() {
-                return null;
-            }
-
-            @Override
-            public File getMapFileFromName(String mapName) {
-                return null;
-            }
-
-            @Override
-            public IChunkLoader getChunkLoader(WorldProvider worldProvider) {
-                return null;
-            }
-
-            @Override
-            public void flush() {}
-
-            @Override
-            public void checkSessionLock() {}
-
-            @Override
-            public String getWorldDirectoryName() {
-                return null;
-            }
-
-            @Override
-            public File getWorldDirectory() {
-                return null;
-            }
-
-            @SuppressWarnings("unused") // for thermos compat
-            public UUID getUUID() {
-                return UUID.nameUUIDFromBytes("MobsInfoDummyWorld".getBytes(StandardCharsets.UTF_8));
-            }
-        }, "DUMMY_DIMENSION", new WorldSettings(new WorldInfo(new NBTTagCompound())), null, new Profiler()) {
-
-            @Override
-            protected IChunkProvider createChunkProvider() {
-                return null;
-            }
-
-            @Override
-            public Entity getEntityByID(int aEntityID) {
-                return null;
-            }
-
-            @Override
-            public boolean setBlock(int aX, int aY, int aZ, Block aBlock, int aMeta, int aFlags) {
-                return true;
-            }
-
-            @Override
-            public float getSunBrightnessFactor(float p_72967_1_) {
-                return 1.0F;
-            }
-
-            @Override
-            public BiomeGenBase getBiomeGenForCoords(int aX, int aZ) {
-                if ((aX >= 16) && (aZ >= 16) && (aX < 32) && (aZ < 32)) {
-                    return BiomeGenBase.plains;
-                }
-                return BiomeGenBase.ocean;
-            }
-
-            @Override
-            public int getFullBlockLightValue(int aX, int aY, int aZ) {
-                return 10;
-            }
-
-            @Override
-            public int getBlockMetadata(int aX, int aY, int aZ) {
-                return 0;
-            }
-
-            @Override
-            public boolean canBlockSeeTheSky(int aX, int aY, int aZ) {
-                if ((aX >= 16) && (aZ >= 16) && (aX < 32) && (aZ < 32)) {
-                    return aY > 64;
-                }
-                return true;
-            }
-
-            @Override
-            protected int func_152379_p() {
-                return 0;
-            }
-
-            @Override
-            public boolean blockExists(int p_72899_1_, int p_72899_2_, int p_72899_3_) {
-                return false;
-            }
-
-            @SuppressWarnings("rawtypes")
-            @Override
-            public List getEntitiesWithinAABB(Class p_72872_1_, AxisAlignedBB p_72872_2_) {
-                return new ArrayList();
-            }
-
-            @Override
-            public Block getBlock(int aX, int aY, int aZ) {
-                if (LoaderReference.TwilightForest && new Throwable().getStackTrace()[1].getClassName()
-                    .equals("twilightforest.client.renderer.entity.RenderTFSnowQueenIceShield"))
-                    return Blocks.packed_ice;
-                if ((aX >= 16) && (aZ >= 16) && (aX < 32) && (aZ < 32)) {
-                    return aY == 64 ? Blocks.grass : Blocks.air;
-                }
-                return Blocks.air;
-            }
-
-            @Override
-            public Explosion newExplosion(Entity p_72885_1_, double p_72885_2_, double p_72885_4_, double p_72885_6_,
-                float p_72885_8_, boolean p_72885_9_, boolean p_72885_10_) {
-                return null;
-            }
+        World f = new DummyWorld() {
 
             @Override
             public boolean spawnEntityInWorld(Entity p_72838_1_) {
@@ -565,13 +318,12 @@ public class MobRecipeLoader {
                         return true;
                     }
                 }
-
                 return false;
             }
         };
         f.isRemote = true; // quick hack to get around achievements
 
-        fakeRand frand = new fakeRand();
+        RandomSequencer frand = new RandomSequencer();
         f.rand = frand;
 
         File cache = Config.getConfigFile("MobRecipeLoader.cache");
@@ -1208,13 +960,15 @@ public class MobRecipeLoader {
             if (Arrays.asList(Config.MobHandler.mobBlacklist)
                 .contains(k)) {
                 if (Config.Debug.loggingLevel == Config.Debug.LoggingLevel.Detailed)
-                    LOG.info("Entity " + k + " is blacklisted, skipping");
+                    LOG.info("Entity {} is blacklisted, skipping", k);
                 continue;
             }
 
             MobRecipe recipe = v.recipe;
             recipe = recipe.copy();
             ArrayList<MobDrop> drops = v.copyDrops();
+
+            recipe.generateSpawnList();
 
             if (MinecraftForge.EVENT_BUS.post(new PreMobRegistrationEvent(k, drops, recipe))) continue;
 
@@ -1271,8 +1025,12 @@ public class MobRecipeLoader {
             recipe = recipe.copy();
             ArrayList<MobDrop> drops = v.copyDrops();
 
+            // TODO: sync with server
+            recipe.generateSpawnList();
+
             if (MinecraftForge.EVENT_BUS.post(new PreMobRegistrationEvent(k, drops, recipe))) return;
 
+            // TODO: sync with server
             ExtraLoader.process(k, drops, recipe);
 
             recipe.mOutputs.clear();

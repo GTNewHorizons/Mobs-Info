@@ -41,6 +41,7 @@ public class NEI_Config implements IConfigureNEI {
         isAdded = false;
         new MobHandler();
         if (LoaderReference.InfernalMobs) new MobHandlerInfernal();
+        new VillagerTradesHandler();
         isAdded = true;
 
         if (LoaderReference.EnderIO && Config.Compatibility.addAllEnderIOSpawnersToNEI) {

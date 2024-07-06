@@ -23,14 +23,24 @@ package com.kuba6000.mobsinfo;
 import static com.kuba6000.mobsinfo.MobsInfo.MODID;
 import static com.kuba6000.mobsinfo.MobsInfo.MODNAME;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.kuba6000.mobsinfo.network.LoadConfigPacket;
 import com.kuba6000.mobsinfo.network.SaveDataPacket;
 
+import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLConstructionEvent;
+import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -72,6 +82,35 @@ public class MobsInfo {
 
     @SidedProxy(clientSide = "com.kuba6000.mobsinfo.ClientProxy", serverSide = "com.kuba6000.mobsinfo.CommonProxy")
     public static CommonProxy proxy;
+
+    @Subscribe
+    public void iAmDependingOnEverything(FMLEvent event) {
+        if (event instanceof FMLPreInitializationEvent) {
+            ModContainer activecontainer = Loader.instance()
+                .activeModContainer();
+            List<ModContainer> list = Loader.instance()
+                .getActiveModList();
+            list.remove(activecontainer);
+            list.add(activecontainer);
+        }
+    }
+
+    @Mod.EventHandler
+    public void construction(FMLConstructionEvent event) {
+        // hack into load order only if JustAnotherSpawner mod is loaded
+        if (!Loader.isModLoaded("JustAnotherSpawner")) return;
+        try {
+            Field loaderControllerField = Loader.class.getDeclaredField("modController");
+            loaderControllerField.setAccessible(true);
+            LoadController controller = (LoadController) loaderControllerField.get(Loader.instance());
+            Field masterEventBus = LoadController.class.getDeclaredField("masterChannel");
+            masterEventBus.setAccessible(true);
+            EventBus bus = (EventBus) masterEventBus.get(controller);
+            bus.register(this);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            //
+        }
+    }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

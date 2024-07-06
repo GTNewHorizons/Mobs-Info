@@ -14,4 +14,7 @@ public interface GuiContainerAccessor {
     @Accessor
     int getGuiTop();
 
+    @Accessor
+    int getYSize();
+
 }
