@@ -505,7 +505,7 @@ public class VillagerTradesHandler extends TemplateRecipeHandler implements IScr
                     this.mod = "Minecraft";
                     break;
                 case 3:
-                    this.profession = "Smith";
+                    this.profession = "Blacksmith";
                     this.mod = "Minecraft";
                     break;
                 case 4:
@@ -513,11 +513,17 @@ public class VillagerTradesHandler extends TemplateRecipeHandler implements IScr
                     this.mod = "Minecraft";
                     break;
                 default: {
-                    ResourceLocation villagerSkin = VillagerRegistry
-                        .getVillagerSkin(this.professionID, new ResourceLocation(""));
+                    ResourceLocation villagerSkin = VillagerRegistry.getVillagerSkin(this.professionID, null);
+                    if (villagerSkin == null) {
+                        this.mod = "Unknown";
+                        this.profession = "Unknown-" + this.professionID;
+                        break;
+                    }
                     String path = villagerSkin.getResourcePath();
                     path = path.substring(path.lastIndexOf('/') + 1);
-                    this.profession = StringUtils.capitalize(path.substring(0, path.lastIndexOf('.')));
+                    if (path.indexOf('.') != -1)
+                        this.profession = StringUtils.capitalize(path.substring(0, path.lastIndexOf('.')));
+                    else this.profession = StringUtils.capitalize(path);
                     this.mod = villagerSkin.getResourceDomain();
                     break;
                 }

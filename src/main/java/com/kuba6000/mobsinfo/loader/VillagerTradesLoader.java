@@ -26,6 +26,7 @@ import com.kuba6000.mobsinfo.api.RandomSequencer;
 import com.kuba6000.mobsinfo.api.VillagerRecipe;
 import com.kuba6000.mobsinfo.api.VillagerTrade;
 import com.kuba6000.mobsinfo.api.utils.ItemID;
+import com.kuba6000.mobsinfo.api.utils.ModUtils;
 import com.kuba6000.mobsinfo.config.Config;
 import com.kuba6000.mobsinfo.nei.VillagerTradesHandler;
 import com.kuba6000.mobsinfo.network.LoadConfigPacket;
@@ -52,6 +53,38 @@ public class VillagerTradesLoader {
         world.rand = frand;
 
         // vanilla recipes?
+
+        ModUtils.TriConsumer<ArrayList<VillagerTrade>, EntityVillager, Integer> detectCustomRecipes = (recipes,
+            villager, villagerID) -> {
+            try {
+                frand.newRound();
+
+                TradeList trades = new TradeList();
+                TradeCollector collector = new TradeCollector();
+                boolean second = false;
+                do {
+                    MerchantRecipeList list = new MerchantRecipeList();
+                    VillagerRegistry.manageVillagerTrades(list, villager, villagerID, world.rand);
+                    collector.collectTrades(trades, list, frand.chance);
+
+                    if (second && frand.chance < 0.0000001d) {
+                        LOG.warn("Skipping " + villagerID + "(CustomHandler) because it's too randomized");
+                        break;
+                    }
+                    second = true;
+                } while (frand.nextRound());
+                frand.newRound();
+                collector.newRound();
+
+                if (!trades.itemsToTrade.isEmpty()) {
+                    for (TradeInstance value : trades.itemsToTrade.values()) {
+                        recipes.add(new VillagerTrade(value.i1, value.i2, value.o, value.chance));
+                    }
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        };
 
         { // profession 0
             EntityVillager entity = new EntityVillager(world);
@@ -80,6 +113,8 @@ public class VillagerTradesLoader {
                     new ItemStack(Items.flint, 5, 0),
                     0.5d));
 
+            detectCustomRecipes.accept(recipes, entity, 0);
+
             VillagerRecipe.recipes.put(0, new VillagerRecipe(recipes, 0, entity));
         }
 
@@ -103,6 +138,8 @@ public class VillagerTradesLoader {
                     new VillagerTrade.TradeItem(new ItemStack(Items.emerald)).setPossibleSizes(5, 64),
                     new VillagerTrade.TradeItem(new ItemStack(Items.book), null, 1),
                     0.07d));
+
+            detectCustomRecipes.accept(recipes, entity, 1);
 
             VillagerRecipe.recipes.put(1, new VillagerRecipe(recipes, 1, entity));
         }
@@ -129,6 +166,8 @@ public class VillagerTradesLoader {
                         new VillagerTrade.TradeItem(new ItemStack(item), null, 5 + 7),
                         0.05d));
             }
+
+            detectCustomRecipes.accept(recipes, entity, 2);
 
             VillagerRecipe.recipes.put(2, new VillagerRecipe(recipes, 2, entity));
         }
@@ -166,6 +205,8 @@ public class VillagerTradesLoader {
             recipes.add(new VillagerTrade(Items.emerald, null, Items.chainmail_chestplate, 0.1d));
             recipes.add(new VillagerTrade(Items.emerald, null, Items.chainmail_leggings, 0.1d));
 
+            detectCustomRecipes.accept(recipes, entity, 3);
+
             VillagerRecipe.recipes.put(3, new VillagerRecipe(recipes, 3, entity));
         }
 
@@ -186,10 +227,12 @@ public class VillagerTradesLoader {
             recipes.add(new VillagerTrade(Items.emerald, null, Items.cooked_porkchop, 0.3d));
             recipes.add(new VillagerTrade(Items.emerald, null, Items.cooked_beef, 0.3d));
 
+            detectCustomRecipes.accept(recipes, entity, 4);
+
             VillagerRecipe.recipes.put(4, new VillagerRecipe(recipes, 4, entity));
         }
 
-        // custom handlers
+        // custom villagers
 
         MobRecipeLoader.isInGenerationProcess = true;
         for (Integer id : VillagerRegistry.getRegisteredVillagers()) {
