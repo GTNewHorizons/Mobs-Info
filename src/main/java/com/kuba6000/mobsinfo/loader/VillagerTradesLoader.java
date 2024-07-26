@@ -47,6 +47,9 @@ public class VillagerTradesLoader {
 
         if (!Config.VillagerTradesHandler.enabled) return;
 
+        LOG.info("Generating Recipe Map for Villager Trades Helper");
+        final long startTime = System.currentTimeMillis();
+
         DummyWorld world = new DummyWorld();
 
         RandomSequencer frand = new RandomSequencer();
@@ -276,6 +279,9 @@ public class VillagerTradesLoader {
         }
         MobRecipeLoader.isInGenerationProcess = false;
 
+        final long endTime = System.currentTimeMillis();
+        LOG.info("Villager trade information generation took {} ms", endTime - startTime);
+
     }
 
     public static void processVillagerTrades() {
@@ -336,9 +342,8 @@ public class VillagerTradesLoader {
                     ItemID.createNoCopy(recipe.getItemToBuy()),
                     recipe.hasSecondItemToBuy() ? ItemID.createNoCopy(recipe.getSecondItemToBuy()) : null),
                 ItemID.createNoCopy(recipe.getItemToSell()));
-            TradeInstance instance;
-            if (itemsToTrade.containsKey(key)) {
-                instance = itemsToTrade.get(key);
+            TradeInstance instance = itemsToTrade.get(key);
+            if (instance != null) {
                 instance.update(recipe);
                 instance.chance += chance;
             } else {

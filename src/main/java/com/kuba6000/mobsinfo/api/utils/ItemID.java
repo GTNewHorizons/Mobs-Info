@@ -35,6 +35,7 @@ public class ItemID {
     private final boolean ignorecount;
     private final boolean ignoremeta;
     private final boolean ignorenbt;
+    private int cachedHashCode = 0;
 
     public static ItemID create(ItemStack stack) {
         return new ItemID(stack, true, true, true, true); // ignore count by default
@@ -80,14 +81,26 @@ public class ItemID {
 
     @Override
     public int hashCode() {
-        return Objects.hash(item, count, meta, tag);
+        int code = cachedHashCode;
+        if (code == 0) {
+            code = Objects.hash(item, count, meta, tag);
+            if (code == 0) {
+                code = 1;
+            }
+            cachedHashCode = code;
+        }
+        return code;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (obj == this) return true;
-        if (obj instanceof ItemID) return obj.hashCode() == this.hashCode();
+        if (obj instanceof ItemID other) {
+            return this.item == other.item && this.count == other.count
+                && this.meta == other.meta
+                && Objects.equals(this.tag, other.tag);
+        }
         if (obj instanceof ItemStack) {
             if (!item.equals(((ItemStack) obj).getItem())) return false;
             if (!ignorecount) if (count != ((ItemStack) obj).stackSize) return false;
