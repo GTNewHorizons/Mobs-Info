@@ -1,9 +1,9 @@
 <div align=center>
-
-# Mobs Info 1.7.10
-
-[![CF Downloads](https://cf.way2muchnoise.eu/full_879914_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/mobs-info) [![Modrinth Downloads](https://img.shields.io/modrinth/dt/ifG4OZxi?logo=modrinth)
-](https://modrinth.com/mod/mobsinfo)
+  
+# Mobs Info 1.7.10 GTNH FORK
+  
+### Please open any mod-related PRs [upstream](https://github.com/kuba6000/Mobs-Info).
+### If you want to change something GTNH-specific please try to do it in the configs or [KubaTech](https://github.com/GTNewHorizons/GT5-Unofficial/blob/master/src/main/java/kubatech/loaders/MobHandlerLoader.java).
 
 </div>
 
