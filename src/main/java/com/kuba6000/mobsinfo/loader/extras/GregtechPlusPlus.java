@@ -2,17 +2,9 @@ package com.kuba6000.mobsinfo.loader.extras;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.item.ItemStack;
 
 import com.kuba6000.mobsinfo.api.MobDrop;
 import com.kuba6000.mobsinfo.api.MobRecipe;
-
-import gtPlusPlus.api.objects.data.AutoMap;
-import gtPlusPlus.api.objects.data.Triplet;
-import gtPlusPlus.core.material.ELEMENT;
 
 public class GregtechPlusPlus implements IExtraLoader {
 
@@ -59,112 +51,115 @@ public class GregtechPlusPlus implements IExtraLoader {
     @Override
     public void process(String k, ArrayList<MobDrop> drops, MobRecipe recipe) {
 
-        // We are not using mixins accessors here because different versions of GT++ can differ much
+        // TODO reflections?
 
-        init();
+        // // We are not using mixins accessors here because different versions of GT++ can differ much
 
-        // gtPlusPlus.core.handler.events.EnderDragonDeathHandler
+        // init();
 
-        if (EnderDragonDeathHandlerClass != null) {
+        // // gtPlusPlus.core.handler.events.EnderDragonDeathHandler
 
-            try {
-                if (EnderDragonDeathHandlerClass_mHEE != null && (boolean) EnderDragonDeathHandlerClass_mHEE.get(null)
-                    && EnderDragonDeathHandlerClass_mHardcoreDragonClass.get(null) != null
-                    && ((Class<?>) EnderDragonDeathHandlerClass_mHardcoreDragonClass.get(null))
-                        .isInstance(recipe.entity)) {
-                    MobDrop drop = new MobDrop(
-                        ELEMENT.STANDALONE.DRAGON_METAL.getNugget(1),
-                        MobDrop.DropType.Normal,
-                        (int) (MobDrop.getChanceBasedOnFromTo(100, 250) * MobDrop.getChanceBasedOnFromTo(5, 25)
-                            * 10000d),
-                        null,
-                        null,
-                        false,
-                        false);
+        // if (EnderDragonDeathHandlerClass != null) {
 
-                    drop.clampChance();
+        // try {
+        // if (EnderDragonDeathHandlerClass_mHEE != null && (boolean) EnderDragonDeathHandlerClass_mHEE.get(null)
+        // && EnderDragonDeathHandlerClass_mHardcoreDragonClass.get(null) != null
+        // && ((Class<?>) EnderDragonDeathHandlerClass_mHardcoreDragonClass.get(null))
+        // .isInstance(recipe.entity)) {
+        // MobDrop drop = new MobDrop(
+        // MaterialsElements.STANDALONE.DRAGON_METAL.getNugget(1),
+        // MobDrop.DropType.Normal,
+        // (int) (MobDrop.getChanceBasedOnFromTo(100, 250) * MobDrop.getChanceBasedOnFromTo(5, 25)
+        // * 10000d),
+        // null,
+        // null,
+        // false,
+        // false);
 
-                    drops.add(drop);
-                } else
-                    if (EnderDragonDeathHandlerClass_mDE != null && (boolean) EnderDragonDeathHandlerClass_mDE.get(null)
-                        && EnderDragonDeathHandlerClass_mChaoseDragonClass.get(null) != null
-                        && ((Class<?>) EnderDragonDeathHandlerClass_mChaoseDragonClass.get(null))
-                            .isInstance(recipe.entity)) {
-                                MobDrop drop = new MobDrop(
-                                    ELEMENT.STANDALONE.DRAGON_METAL.getIngot(1),
-                                    MobDrop.DropType.Normal,
-                                    (int) (MobDrop.getChanceBasedOnFromTo(100, 200)
-                                        * MobDrop.getChanceBasedOnFromTo(1, 5)
-                                        * 10000d),
-                                    null,
-                                    null,
-                                    false,
-                                    false);
+        // drop.clampChance();
 
-                                drop.clampChance();
+        // drops.add(drop);
+        // } else
+        // if (EnderDragonDeathHandlerClass_mDE != null && (boolean) EnderDragonDeathHandlerClass_mDE.get(null)
+        // && EnderDragonDeathHandlerClass_mChaoseDragonClass.get(null) != null
+        // && ((Class<?>) EnderDragonDeathHandlerClass_mChaoseDragonClass.get(null))
+        // .isInstance(recipe.entity)) {
+        // MobDrop drop = new MobDrop(
+        // MaterialsElements.STANDALONE.DRAGON_METAL.getIngot(1),
+        // MobDrop.DropType.Normal,
+        // (int) (MobDrop.getChanceBasedOnFromTo(100, 200)
+        // * MobDrop.getChanceBasedOnFromTo(1, 5)
+        // * 10000d),
+        // null,
+        // null,
+        // false,
+        // false);
 
-                                drops.add(drop);
-                            } else
-                        if (recipe.entity instanceof EntityDragon) {
-                            MobDrop drop = new MobDrop(
-                                ELEMENT.STANDALONE.DRAGON_METAL.getNugget(1),
-                                MobDrop.DropType.Normal,
-                                (int) (MobDrop.getChanceBasedOnFromTo(25, 50) * MobDrop.getChanceBasedOnFromTo(1, 10)
-                                    * 10000d),
-                                null,
-                                null,
-                                false,
-                                false);
+        // drop.clampChance();
 
-                            drop.clampChance();
+        // drops.add(drop);
+        // } else
+        // if (recipe.entity instanceof EntityDragon) {
+        // MobDrop drop = new MobDrop(
+        // MaterialsElements.STANDALONE.DRAGON_METAL.getNugget(1),
+        // MobDrop.DropType.Normal,
+        // (int) (MobDrop.getChanceBasedOnFromTo(25, 50) * MobDrop.getChanceBasedOnFromTo(1, 10)
+        // * 10000d),
+        // null,
+        // null,
+        // false,
+        // false);
 
-                            drops.add(drop);
-                        }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        // drop.clampChance();
 
-        // gtPlusPlus.core.handler.events.EntityDeathHandler
+        // drops.add(drop);
+        // }
+        // } catch (IllegalAccessException e) {
+        // throw new RuntimeException(e);
+        // }
+        // }
 
-        if (EntityDeathHandlerClass != null && EntityDeathHandlerClass_mMobDropMap != null) {
+        // // gtPlusPlus.core.handler.events.EntityDeathHandler
 
-            try {
+        // if (EntityDeathHandlerClass != null && EntityDeathHandlerClass_mMobDropMap != null) {
 
-                @SuppressWarnings({ "unchecked", "rawtypes" })
-                HashMap<Class, AutoMap<Triplet<ItemStack, Integer, Integer>>> mMobDropMap = (HashMap<Class, AutoMap<Triplet<ItemStack, Integer, Integer>>>) EntityDeathHandlerClass_mMobDropMap
-                    .get(null);
+        // try {
 
-                AutoMap<Triplet<ItemStack, Integer, Integer>> dropEntry = mMobDropMap.get(recipe.entity.getClass());
+        // @SuppressWarnings({ "unchecked", "rawtypes" })
+        // HashMap<Class, AutoMap<Triplet<ItemStack, Integer, Integer>>> mMobDropMap = (HashMap<Class,
+        // AutoMap<Triplet<ItemStack, Integer, Integer>>>) EntityDeathHandlerClass_mMobDropMap
+        // .get(null);
 
-                if (dropEntry != null && !dropEntry.isEmpty()) {
-                    for (Triplet<ItemStack, Integer, Integer> data : dropEntry) {
-                        ItemStack loot = data.getValue_1();
-                        int maxDrop = data.getValue_2();
-                        int chance = data.getValue_3();
-                        if (loot == null) continue;
+        // AutoMap<Triplet<ItemStack, Integer, Integer>> dropEntry = mMobDropMap.get(recipe.entity.getClass());
 
-                        loot = loot.copy();
-                        loot.stackSize = 1;
+        // if (dropEntry != null && !dropEntry.isEmpty()) {
+        // for (Triplet<ItemStack, Integer, Integer> data : dropEntry) {
+        // ItemStack loot = data.getValue_1();
+        // int maxDrop = data.getValue_2();
+        // int chance = data.getValue_3();
+        // if (loot == null) continue;
 
-                        MobDrop drop = new MobDrop(
-                            loot,
-                            MobDrop.DropType.Normal,
-                            (int) (MobDrop.getChanceBasedOnFromTo(1, maxDrop) * 10000d * ((double) chance / 10000d)),
-                            null,
-                            null,
-                            false,
-                            false);
+        // loot = loot.copy();
+        // loot.stackSize = 1;
 
-                        drop.clampChance();
+        // MobDrop drop = new MobDrop(
+        // loot,
+        // MobDrop.DropType.Normal,
+        // (int) (MobDrop.getChanceBasedOnFromTo(1, maxDrop) * 10000d * ((double) chance / 10000d)),
+        // null,
+        // null,
+        // false,
+        // false);
 
-                        drops.add(drop);
-                    }
-                }
+        // drop.clampChance();
 
-            } catch (Exception ignored) {}
+        // drops.add(drop);
+        // }
+        // }
 
-        }
+        // } catch (Exception ignored) {}
+
+        // }
 
     }
 }
