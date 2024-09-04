@@ -12,7 +12,7 @@ import com.kuba6000.mobsinfo.api.MobRecipe;
 
 import gtPlusPlus.api.objects.data.AutoMap;
 import gtPlusPlus.api.objects.data.Triplet;
-import gtPlusPlus.core.material.ELEMENT;
+import gtPlusPlus.core.material.MaterialsElements;
 
 public class GregtechPlusPlus implements IExtraLoader {
 
@@ -73,7 +73,7 @@ public class GregtechPlusPlus implements IExtraLoader {
                     && ((Class<?>) EnderDragonDeathHandlerClass_mHardcoreDragonClass.get(null))
                         .isInstance(recipe.entity)) {
                     MobDrop drop = new MobDrop(
-                        ELEMENT.STANDALONE.DRAGON_METAL.getNugget(1),
+                        MaterialsElements.STANDALONE.DRAGON_METAL.getNugget(1),
                         MobDrop.DropType.Normal,
                         (int) (MobDrop.getChanceBasedOnFromTo(100, 250) * MobDrop.getChanceBasedOnFromTo(5, 25)
                             * 10000d),
@@ -91,7 +91,7 @@ public class GregtechPlusPlus implements IExtraLoader {
                         && ((Class<?>) EnderDragonDeathHandlerClass_mChaoseDragonClass.get(null))
                             .isInstance(recipe.entity)) {
                                 MobDrop drop = new MobDrop(
-                                    ELEMENT.STANDALONE.DRAGON_METAL.getIngot(1),
+                                    MaterialsElements.STANDALONE.DRAGON_METAL.getIngot(1),
                                     MobDrop.DropType.Normal,
                                     (int) (MobDrop.getChanceBasedOnFromTo(100, 200)
                                         * MobDrop.getChanceBasedOnFromTo(1, 5)
@@ -107,7 +107,7 @@ public class GregtechPlusPlus implements IExtraLoader {
                             } else
                         if (recipe.entity instanceof EntityDragon) {
                             MobDrop drop = new MobDrop(
-                                ELEMENT.STANDALONE.DRAGON_METAL.getNugget(1),
+                                MaterialsElements.STANDALONE.DRAGON_METAL.getNugget(1),
                                 MobDrop.DropType.Normal,
                                 (int) (MobDrop.getChanceBasedOnFromTo(25, 50) * MobDrop.getChanceBasedOnFromTo(1, 10)
                                     * 10000d),
