@@ -2,15 +2,9 @@ package com.kuba6000.mobsinfo.loader.extras;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import javax.annotation.Nonnull;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 import com.kuba6000.mobsinfo.api.IChanceModifier;
 import com.kuba6000.mobsinfo.api.MobDrop;
@@ -33,7 +27,8 @@ public class ElectroMagicTools implements IExtraLoader {
                 false,
                 false);
             drop.variableChance = true;
-            drop.chanceModifiers.addAll(Arrays.asList(new IChanceModifier.NormalChance(100d), new EMTCreeper()));
+            drop.chanceModifiers
+                .addAll(Arrays.asList(new IChanceModifier.NormalChance(100d), new IChanceModifier.PoweredCreeper()));
             drops.add(drop);
         }
         if (recipe.entity instanceof EntityTaintChicken) {
@@ -50,21 +45,4 @@ public class ElectroMagicTools implements IExtraLoader {
         }
     }
 
-    private static class EMTCreeper implements IChanceModifier {
-
-        @Override
-        public String getDescription() {
-            return Translations.EMT_CREEPER.get();
-        }
-
-        @Override
-        public double apply(double chance, @Nonnull World world, @Nonnull List<ItemStack> drops, Entity attacker,
-            EntityLiving victim) {
-            if (chance == 0d) return 0d;
-            if (victim == null) return 0d;
-            if (victim instanceof EntityCreeper && ((EntityCreeper) victim).getPowered()) return chance;
-            return 0d;
-        }
-
-    }
 }

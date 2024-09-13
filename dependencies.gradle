@@ -68,6 +68,7 @@ dependencies {
     compileOnly("curse.maven:CoFHCore-69162:2388751") // DEV JAR
     compileOnly("curse.maven:ExtraUtilities-225561:2264384") // DEOBF JAR
     compileOnly(rfg.deobf("curse.maven:JustAnotherSpawner-228952:2380961"))
+    compileOnly(rfg.deobf("curse.maven:reliquary-reincarnations-241319:2323453"))
     compileOnly(deobf("https://github.com/Roadhog360/Et-Futurum-Requiem/releases/download/2.5.1/Et_Futurum_Requiem-2.5.1+nomixin.jar", "Et Futurum Requiem"))
 
     compileOnly(rfg.deobf(project.files("libs/dqr.jar")))

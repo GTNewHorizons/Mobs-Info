@@ -40,7 +40,8 @@ public enum LoaderReference {
     ExtraUtilities("ExtraUtilities"),
     EtFuturumRequiem("etfuturum"),
     LycanitesMobs("lycanitesmobs"),
-    JustAnotherSpawner("JustAnotherSpawner"),;
+    JustAnotherSpawner("JustAnotherSpawner"),
+    Reliquarry("xreliquary"),;
 
     public final String modID;
     public final boolean isLoaded;

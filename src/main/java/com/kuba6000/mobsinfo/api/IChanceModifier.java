@@ -11,6 +11,7 @@ import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -416,5 +417,23 @@ public interface IChanceModifier {
             enchantment = Enchantment.enchantmentsList[byteBuf.readInt()];
             change = byteBuf.readDouble();
         }
+    }
+
+    class PoweredCreeper implements IChanceModifier {
+
+        @Override
+        public String getDescription() {
+            return Translations.POWERED_CREEPER.get();
+        }
+
+        @Override
+        public double apply(double chance, @Nonnull World world, @Nonnull List<ItemStack> drops, Entity attacker,
+            EntityLiving victim) {
+            if (chance == 0d) return 0d;
+            if (victim == null) return 0d;
+            if (victim instanceof EntityCreeper && ((EntityCreeper) victim).getPowered()) return chance;
+            return 0d;
+        }
+
     }
 }
