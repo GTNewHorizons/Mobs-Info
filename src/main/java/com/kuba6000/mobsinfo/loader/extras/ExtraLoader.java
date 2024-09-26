@@ -19,8 +19,8 @@ import com.kuba6000.mobsinfo.api.IMobExtraInfoProvider;
 import com.kuba6000.mobsinfo.api.LoaderReference;
 import com.kuba6000.mobsinfo.api.MobDrop;
 import com.kuba6000.mobsinfo.api.MobRecipe;
-import com.kuba6000.mobsinfo.mixin.minecraft.ASMEventHandlerAccessor;
-import com.kuba6000.mobsinfo.mixin.minecraft.EventBusAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.ASMEventHandlerAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.EventBusAccessor;
 
 import cpw.mods.fml.common.eventhandler.ASMEventHandler;
 import cpw.mods.fml.common.eventhandler.IEventListener;

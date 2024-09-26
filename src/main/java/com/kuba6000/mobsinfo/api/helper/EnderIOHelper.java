@@ -25,7 +25,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.boss.IBossDisplayData;
 
 import com.kuba6000.mobsinfo.api.LoaderReference;
-import com.kuba6000.mobsinfo.mixin.EnderIO.ItemSoulVesselAccessor;
+import com.kuba6000.mobsinfo.mixin.late.EnderIO.ItemSoulVesselAccessor;
 
 import crazypants.enderio.EnderIO;
 

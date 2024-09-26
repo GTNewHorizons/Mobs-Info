@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 import com.kuba6000.mobsinfo.MobsInfo;
 import com.kuba6000.mobsinfo.api.helper.TranslationHelper;
 import com.kuba6000.mobsinfo.api.utils.FastRandom;
-import com.kuba6000.mobsinfo.mixin.InfernalMobs.InfernalMobsCoreAccessor;
+import com.kuba6000.mobsinfo.mixin.late.InfernalMobs.InfernalMobsCoreAccessor;
 import com.kuba6000.mobsinfo.nei.scrollable.IScrollableGUI;
 import com.kuba6000.mobsinfo.nei.scrollable.Scrollbar;
 

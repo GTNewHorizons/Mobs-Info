@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import com.kuba6000.mobsinfo.mixin.EnderIO.BlockPoweredSpawnerAccessor;
+import com.kuba6000.mobsinfo.mixin.late.EnderIO.BlockPoweredSpawnerAccessor;
 
 import crazypants.enderio.EnderIO;
 import crazypants.enderio.machine.spawner.BlockPoweredSpawner;

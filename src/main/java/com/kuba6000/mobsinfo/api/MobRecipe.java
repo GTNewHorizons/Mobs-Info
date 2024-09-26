@@ -25,7 +25,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.kuba6000.mobsinfo.api.helper.EnderIOHelper;
 import com.kuba6000.mobsinfo.api.helper.InfernalMobsCoreHelper;
 import com.kuba6000.mobsinfo.loader.MobRecipeLoader;
-import com.kuba6000.mobsinfo.mixin.InfernalMobs.InfernalMobsCoreAccessor;
+import com.kuba6000.mobsinfo.mixin.late.InfernalMobs.InfernalMobsCoreAccessor;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 import jas.spawner.modern.MVELProfile;

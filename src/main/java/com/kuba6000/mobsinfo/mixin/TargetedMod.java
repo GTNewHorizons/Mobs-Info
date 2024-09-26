@@ -1,51 +1,38 @@
 package com.kuba6000.mobsinfo.mixin;
 
-import java.nio.file.Path;
-
-import com.google.common.io.Files;
+import cpw.mods.fml.common.Mod;
 
 public enum TargetedMod {
 
-    VANILLA("Minecraft", "unused", true),
-    INFERNAL_MOBS("InfernalMobs", "InfernalMobs-", true),
-    ENDER_IO("EnderIO", "EnderIO", true),
-    DRACONIC_EVOLUTION("DraconicEvolution", "Draconic-Evolution-", true),
-    DQ_RESPECT("DQMIIINext", "[1.7.10]DQRmod", true),
-    CHOCO_CRAFT("chococraft", "ChocoCraftPlus-", true),
-    BATTLE_GEAR_2("battlegear2", "battlegear2-", true),
-    HARDCORE_ENDER_EXPANSION("HardcoreEnderExpansion", "HardcoreEnderExpansion-", true),
-    FORESTRY("Forestry", "Forestry-", true),
+    BATTLE_GEAR_2("Mine & Blade Battlegear 2", null, "battlegear2"),
+    CHOCO_CRAFT("ChocoCraft Plus", null, "chococraft"),
+    DQ_RESPECT("DQRespect", null, "DQMIIINext"),
+    DRACONIC_EVOLUTION("Draconic Evolution", null, "DraconicEvolution"),
+    ENDER_IO("Ender IO", null, "EnderIO"),
+    FORESTRY("Forestry", null, "Forestry"),
+    HARDCORE_ENDER_EXPANSION("Hardcore Ender Expansion", null, "HardcoreEnderExpansion"),
+    INFERNAL_MOBS("Infernal Mobs", null, "InfernalMobs"),
+    VANILLA("Minecraft", null);
 
-    ;
-
+    /** The "name" in the {@link Mod @Mod} annotation */
     public final String modName;
-    public final String jarNamePrefixLowercase;
-    public final boolean loadInDevelopment;
+    /** Class that implements the IFMLLoadingPlugin interface */
+    public final String coreModClass;
+    /** The "modid" in the {@link Mod @Mod} annotation */
+    public final String modId;
 
-    TargetedMod(String modName, String jarNamePrefix, boolean loadInDevelopment) {
-        this.modName = modName;
-        this.jarNamePrefixLowercase = jarNamePrefix.toLowerCase();
-        this.loadInDevelopment = loadInDevelopment;
+    TargetedMod(String modName, String coreModClass) {
+        this(modName, coreModClass, null);
     }
 
-    @SuppressWarnings("UnstableApiUsage")
-    public boolean isMatchingJar(Path path) {
-        final String pathString = path.toString();
-        final String nameLowerCase = Files.getNameWithoutExtension(pathString)
-            .toLowerCase();
-        final String fileExtension = Files.getFileExtension(pathString);
-
-        return nameLowerCase.startsWith(jarNamePrefixLowercase) && "jar".equals(fileExtension);
+    TargetedMod(String modName, String coreModClass, String modId) {
+        this.modName = modName;
+        this.coreModClass = coreModClass;
+        this.modId = modId;
     }
 
     @Override
     public String toString() {
-        return "TargetedMod{" + "modName='"
-            + modName
-            + '\''
-            + ", jarNamePrefixLowercase='"
-            + jarNamePrefixLowercase
-            + '\''
-            + '}';
+        return "TargetedMod{modName='" + modName + "', coreModClass='" + coreModClass + "', modId='" + modId + "'}";
     }
 }

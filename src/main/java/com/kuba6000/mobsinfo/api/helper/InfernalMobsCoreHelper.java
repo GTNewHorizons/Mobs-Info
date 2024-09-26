@@ -10,7 +10,7 @@ import java.util.List;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
 
-import com.kuba6000.mobsinfo.mixin.InfernalMobs.InfernalMobsCoreAccessor;
+import com.kuba6000.mobsinfo.mixin.late.InfernalMobs.InfernalMobsCoreAccessor;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 

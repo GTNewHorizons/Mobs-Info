@@ -37,7 +37,7 @@ import com.kuba6000.mobsinfo.api.utils.GSONUtils;
 import com.kuba6000.mobsinfo.api.utils.ItemID;
 import com.kuba6000.mobsinfo.api.utils.ModUtils;
 import com.kuba6000.mobsinfo.config.Config;
-import com.kuba6000.mobsinfo.mixin.minecraft.VillagerRegistryAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.VillagerRegistryAccessor;
 import com.kuba6000.mobsinfo.nei.VillagerTradesHandler;
 import com.kuba6000.mobsinfo.network.LoadConfigPacket;
 

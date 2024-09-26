@@ -5,7 +5,7 @@ import java.awt.Point;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
-import com.kuba6000.mobsinfo.mixin.minecraft.GuiContainerAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.GuiContainerAccessor;
 
 import codechicken.nei.guihook.IContainerObjectHandler;
 import codechicken.nei.recipe.GuiRecipe;

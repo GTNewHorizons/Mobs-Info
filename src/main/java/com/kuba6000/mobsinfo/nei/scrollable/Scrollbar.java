@@ -11,8 +11,8 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-import com.kuba6000.mobsinfo.mixin.minecraft.GuiAccessor;
-import com.kuba6000.mobsinfo.mixin.minecraft.GuiContainerAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.GuiAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.GuiContainerAccessor;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIClientUtils;

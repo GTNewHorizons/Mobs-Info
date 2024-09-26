@@ -42,7 +42,7 @@ import net.minecraft.world.World;
 import com.kuba6000.mobsinfo.api.DummyWorld;
 import com.kuba6000.mobsinfo.api.MobDrop;
 import com.kuba6000.mobsinfo.api.MobRecipe;
-import com.kuba6000.mobsinfo.mixin.minecraft.EntitySlimeAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.EntitySlimeAccessor;
 
 public class VanillaMobRecipeLoader {
 

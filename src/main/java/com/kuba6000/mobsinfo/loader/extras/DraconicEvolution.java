@@ -22,7 +22,7 @@ import com.brandon3055.draconicevolution.common.handler.MinecraftForgeEventHandl
 import com.kuba6000.mobsinfo.api.IChanceModifier;
 import com.kuba6000.mobsinfo.api.MobDrop;
 import com.kuba6000.mobsinfo.api.MobRecipe;
-import com.kuba6000.mobsinfo.mixin.DraconicEvolution.MinecraftForgeEventHandlerAccessor;
+import com.kuba6000.mobsinfo.mixin.late.DraconicEvolution.MinecraftForgeEventHandlerAccessor;
 
 import io.netty.buffer.ByteBuf;
 

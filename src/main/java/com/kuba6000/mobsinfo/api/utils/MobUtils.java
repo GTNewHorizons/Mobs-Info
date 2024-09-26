@@ -39,7 +39,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Rectangle;
 
-import com.kuba6000.mobsinfo.mixin.minecraft.RendererLivingEntityAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.RendererLivingEntityAccessor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -40,9 +40,9 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 
 import com.google.common.collect.Multimap;
 import com.kuba6000.mobsinfo.MobsInfo;
-import com.kuba6000.mobsinfo.mixin.minecraft.ASMEventHandlerAccessor;
-import com.kuba6000.mobsinfo.mixin.minecraft.EventBusAccessor;
-import com.kuba6000.mobsinfo.mixin.minecraft.VillagerRegistryAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.ASMEventHandlerAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.EventBusAccessor;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.VillagerRegistryAccessor;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
