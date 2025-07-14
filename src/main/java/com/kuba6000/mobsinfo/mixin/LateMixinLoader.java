@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
+import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 
 @LateMixin
 public class LateMixinLoader implements ILateMixinLoader {
@@ -16,7 +17,7 @@ public class LateMixinLoader implements ILateMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedMods) {
-        return Mixin.getLateMixins(loadedMods);
+        return IMixins.getLateMixins(Mixin.class, loadedMods);
     }
 
 }

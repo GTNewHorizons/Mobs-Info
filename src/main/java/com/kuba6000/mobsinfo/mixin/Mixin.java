@@ -2,28 +2,30 @@ package com.kuba6000.mobsinfo.mixin;
 
 import static com.kuba6000.mobsinfo.mixin.TargetedMod.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Nonnull;
 
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import com.gtnewhorizon.gtnhmixins.builders.IMixins;
+import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
 
-public enum Mixin {
+public enum Mixin implements IMixins {
 
     // Minecraft
-    EnchantmentHelperMixin("minecraft.EnchantmentHelperMixin", VANILLA),
-    EntityAccessor("minecraft.EntityAccessor", VANILLA),
-    EntityLivingAccessor("minecraft.EntityLivingAccessor", VANILLA),
-    EntityLivingBaseAccessor("minecraft.EntityLivingBaseAccessor", VANILLA),
-    EntitySlimeAccessor("minecraft.EntitySlimeAccessor", VANILLA),
-    EntityVillagerAccessor("minecraft.EntityVillagerAccessor", VANILLA),
-    EventBusAccessor("minecraft.EventBusAccessor", VANILLA),
-    RendererLivingEntityAccessor("minecraft.RendererLivingEntityAccessor", VANILLA),
-    GuiAccessor("minecraft.GuiAccessor", VANILLA),
-    GuiContainerAccessor("minecraft.GuiContainerAccessor", VANILLA),
-    ASMEventHandlerAccessor("minecraft.ASMEventHandlerAccessor", VANILLA),
-    VillagerRegistryAccessor("minecraft.VillagerRegistryAccessor", VANILLA),
+    MINECRAFT(new MixinBuilder()
+        .addCommonMixins(
+            "minecraft.EnchantmentHelperMixin",
+            "minecraft.EntityAccessor",
+            "minecraft.EntityLivingAccessor",
+            "minecraft.EntityLivingBaseAccessor",
+            "minecraft.EntitySlimeAccessor",
+            "minecraft.EntityVillagerAccessor",
+            "minecraft.EventBusAccessor",
+            "minecraft.ASMEventHandlerAccessor",
+            "minecraft.VillagerRegistryAccessor")
+        .addClientMixins(
+            "minecraft.RendererLivingEntityAccessor",
+            "minecraft.GuiAccessor",
+            "minecraft.GuiContainerAccessor")
+        .setPhase(Phase.EARLY)),
 
     // Infernal Mobs
     InfernalMobsCoreAccessor("InfernalMobs.InfernalMobsCoreAccessor", INFERNAL_MOBS),
@@ -52,71 +54,25 @@ public enum Mixin {
 
     ;
 
-    public final String mixinClass;
-    public final List<TargetedMod> targetedMods;
-    private final Side side;
-    private final Phase phase;
+    private final MixinBuilder builder;
+
+    Mixin(MixinBuilder builder) {
+        this.builder = builder;
+    }
 
     Mixin(String mixinClass, TargetedMod... targetedMods) {
-        this.mixinClass = mixinClass;
-        this.targetedMods = Arrays.asList(targetedMods);
-        this.side = Side.BOTH;
-        this.phase = this.targetedMods.size() == 1 && this.targetedMods.contains(VANILLA) ? Phase.EARLY : Phase.LATE;
-    }
-
-    public static List<String> getEarlyMixins(Set<String> loadedCoreMods) {
-        final List<String> mixins = new ArrayList<>();
-        for (Mixin mixin : Mixin.values()) {
-            if (mixin.phase == Phase.EARLY) {
-                mixins.add(mixin.mixinClass);
+        this.builder = new MixinBuilder().addCommonMixins(mixinClass)
+            .setPhase(Phase.LATE);
+        if (targetedMods != null) {
+            for (TargetedMod mod : targetedMods) {
+                this.builder.addRequiredMod(mod);
             }
         }
-        return mixins;
     }
 
-    public static List<String> getLateMixins(Set<String> loadedMods) {
-        // NOTE: Any targetmod here needs a modid, not a coremod id
-        final List<String> mixins = new ArrayList<>();
-        for (Mixin mixin : Mixin.values()) {
-            if (mixin.phase == Phase.LATE) {
-                if (mixin.shouldLoad(loadedMods)) {
-                    mixins.add(mixin.mixinClass);
-                }
-            }
-        }
-        return mixins;
-    }
-
-    private boolean shouldLoad(Set<String> loadedMods) {
-        return shouldLoadSide() && allModsLoaded(loadedMods);
-    }
-
-    private boolean shouldLoadSide() {
-        return side == Side.BOTH || (side == Side.SERVER && FMLLaunchHandler.side()
-            .isServer())
-            || (side == Side.CLIENT && FMLLaunchHandler.side()
-                .isClient());
-    }
-
-    private boolean allModsLoaded(Set<String> loadedMods) {
-        if (targetedMods.isEmpty()) return false;
-        for (TargetedMod target : targetedMods) {
-            if (target == TargetedMod.VANILLA) continue;
-            if (target.modId != null && !loadedMods.isEmpty() && !loadedMods.contains(target.modId)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private enum Side {
-        BOTH,
-        CLIENT,
-        SERVER
-    }
-
-    private enum Phase {
-        EARLY,
-        LATE,
+    @Nonnull
+    @Override
+    public MixinBuilder getBuilder() {
+        return this.builder;
     }
 }

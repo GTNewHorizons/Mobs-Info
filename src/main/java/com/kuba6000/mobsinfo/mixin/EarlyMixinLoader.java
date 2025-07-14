@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
+import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
@@ -41,6 +42,6 @@ public class EarlyMixinLoader implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
-        return Mixin.getEarlyMixins(loadedCoreMods);
+        return IMixins.getEarlyMixins(Mixin.class, loadedCoreMods);
     }
 }
