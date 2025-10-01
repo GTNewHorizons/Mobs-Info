@@ -35,7 +35,7 @@
  */
 
 dependencies {
-    api("com.github.GTNewHorizons:NotEnoughItems:2.8.0-GTNH:dev")
+    api("com.github.GTNewHorizons:NotEnoughItems:2.8.1-GTNH-pre:dev")
     devOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.9.26:dev")
     devOnlyNonPublishable(rfg.deobf("curse.maven:Infernal-Mobs-227875:2227584"))
     compileOnly("com.github.GTNewHorizons:BetterLoadingScreen:1.7.2-GTNH:dev") { transitive = false }
