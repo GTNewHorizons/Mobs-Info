@@ -27,7 +27,7 @@ public class ThaumicTinkerer implements IExtraLoader {
                 0,
                 null,
                 null,
-                false,
+                true,
                 false);
             drop.variableChance = true;
             drop.chanceModifiers.addAll(
@@ -43,7 +43,7 @@ public class ThaumicTinkerer implements IExtraLoader {
                 0,
                 null,
                 null,
-                false,
+                true,
                 false);
             drop.variableChance = true;
             drop.chanceModifiers.addAll(
