@@ -80,6 +80,7 @@ import com.kuba6000.mobsinfo.api.utils.ModUtils;
 import com.kuba6000.mobsinfo.config.Config;
 import com.kuba6000.mobsinfo.mixin.early.minecraft.GuiContainerAccessor;
 import com.kuba6000.mobsinfo.mixin.late.InfernalMobs.InfernalMobsCoreAccessor;
+import com.kuba6000.mobsinfo.nei.MobHandler.MobPositionedStack;
 import com.kuba6000.mobsinfo.nei.scrollable.IScrollableGUI;
 import com.kuba6000.mobsinfo.nei.scrollable.Scrollbar;
 import com.kuba6000.mobsinfo.savedata.PlayerData;
@@ -126,6 +127,7 @@ public class MobHandler extends TemplateRecipeHandler implements IScrollableGUI 
         SPAWNS_EVERYWHERE,
         SPAWNS_IN,
         SPAWNS_NOT_IN,
+        WITHER_SKELETON_NAME,
 
         ;
 
@@ -821,7 +823,9 @@ public class MobHandler extends TemplateRecipeHandler implements IScrollableGUI 
             mobname = EntityList.getEntityString(mob);
             // noinspection ConstantConditions
             localizedName = mobname.equals("Skeleton") && ((EntitySkeleton) mob).getSkeletonType() == 1
-                ? "Wither Skeleton"
+                ? (StatCollector.canTranslate("entity.WitherSkeleton.name")
+                    ? StatCollector.translateToLocal("entity.WitherSkeleton.name")
+                    : Translations.WITHER_SKELETON_NAME.get())
                 : (!mob.getCommandSenderName()
                     .startsWith("entity.") ? mob.getCommandSenderName() : mobname);
             if (id != 0) {
