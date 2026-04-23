@@ -78,6 +78,7 @@ import com.kuba6000.mobsinfo.api.utils.FastRandom;
 import com.kuba6000.mobsinfo.api.utils.MobUtils;
 import com.kuba6000.mobsinfo.api.utils.ModUtils;
 import com.kuba6000.mobsinfo.config.Config;
+import com.kuba6000.mobsinfo.mixin.early.minecraft.EntityLivingAccessor;
 import com.kuba6000.mobsinfo.mixin.early.minecraft.GuiContainerAccessor;
 import com.kuba6000.mobsinfo.mixin.late.InfernalMobs.InfernalMobsCoreAccessor;
 import com.kuba6000.mobsinfo.nei.scrollable.IScrollableGUI;
@@ -169,6 +170,7 @@ public class MobHandler extends TemplateRecipeHandler implements IScrollableGUI 
     public static int cycleTicksStatic = Math.abs((int) System.currentTimeMillis());
     private static final int itemsPerRow = 8, itemXShift = 18, itemYShift = 18, nextRowYShift = 35, itemsYStartMin = 83;
     private static int itemsYStart = itemsYStartMin;
+    private static int lastArmorTick = 0;
 
     public static void addRecipe(EntityLiving e, List<MobDrop> drop) {
         List<MobPositionedStack> positionedStacks = new ArrayList<>();
@@ -347,6 +349,20 @@ public class MobHandler extends TemplateRecipeHandler implements IScrollableGUI 
 
         try {
             EntityLiving e = currentrecipe.mob;
+            String mobName = EntityList.getEntityString(e);
+
+            if ("TwilightForest.SnowGuardian".equals(mobName)) {
+                if (lastArmorTick == 0) {
+                    ((EntityLivingAccessor) e).callAddRandomArmor();
+                    lastArmorTick += 1;
+                }
+
+                if (cycleTicksStatic % 20 == 0 && cycleTicksStatic != lastArmorTick) {
+                    lastArmorTick = cycleTicksStatic;
+
+                    ((EntityLivingAccessor) e).callAddRandomArmor();
+                }
+            }
 
             int mobx = 31, moby = 50;
             e.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
