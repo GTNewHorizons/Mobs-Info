@@ -21,6 +21,8 @@
 package com.kuba6000.mobsinfo.api.utils;
 
 import java.nio.FloatBuffer;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -41,10 +43,23 @@ import org.lwjgl.util.Rectangle;
 
 import com.kuba6000.mobsinfo.mixin.early.minecraft.RendererLivingEntityAccessor;
 
+import codechicken.nei.scroll.GuiHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class MobUtils {
+
+    private static final int PREVIEW_BOX_X = 8;
+    private static final int PREVIEW_BOX_Y = 8;
+    private static final int PREVIEW_BOX_WIDTH = 46;
+    private static final int PREVIEW_BOX_HEIGHT = 52;
+    private static final int PREVIEW_ANCHOR_X = 31;
+    private static final int PREVIEW_ANCHOR_Y = 50;
+    private static final float PREVIEW_MEASURE_SCALE = 20f;
+    private static final float PREVIEW_ZOOM_MIN = 0.75f;
+    private static final float PREVIEW_ZOOM_MAX = 1.5f;
+    private static final float PREVIEW_ZOOM_STEP = 0.05f;
+    private static final Map<EntityLiving, Float> previewZooms = new WeakHashMap<>();
 
     @Deprecated
     @SideOnly(Side.CLIENT)
@@ -239,5 +254,69 @@ public class MobUtils {
         // sizeCache.put(mobSizeKey, size);
 
         // return new Rectangle(size);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void renderMobPreview(EntityLiving mob, float guiLeft, float guiTop, int mouseX, int mouseY) {
+        int mobx = PREVIEW_ANCHOR_X;
+        int moby = PREVIEW_ANCHOR_Y;
+
+        // GL feedback bounds must not be clipped by any active scissor state.
+        boolean scissorWasEnabled = GL11.glIsEnabled(GL11.GL_SCISSOR_TEST);
+        if (scissorWasEnabled) GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        Rectangle bounds;
+        try {
+            bounds = getMobSizeInGui(mob, mobx, moby, (int) PREVIEW_MEASURE_SCALE);
+        } finally {
+            if (scissorWasEnabled) GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        }
+
+        float ylocal = (bounds.getY() + bounds.getHeight()) - guiTop;
+        float wantedy = 54.f;
+
+        float newScale = 40.f / bounds.getHeight();
+        float newScaleX = 38.f / bounds.getWidth();
+        if (newScaleX < newScale) newScale = newScaleX;
+
+        newScale = (float) Math.round(PREVIEW_MEASURE_SCALE * newScale * getPreviewZoom(mob)) / PREVIEW_MEASURE_SCALE;
+
+        float a = moby - ylocal;
+        float aa = a - (a * newScale);
+        float aaa = (wantedy - ylocal) - aa;
+
+        float finalNewScale = newScale;
+        GuiHelper.useScissor(PREVIEW_BOX_X, PREVIEW_BOX_Y, PREVIEW_BOX_WIDTH, PREVIEW_BOX_HEIGHT, () -> {
+            GuiInventory.func_147046_a(
+                mobx,
+                (int) (moby + aaa),
+                Math.round(PREVIEW_MEASURE_SCALE * finalNewScale),
+                (guiLeft + mobx) - mouseX,
+                guiTop + moby - 25 - mouseY,
+                mob);
+        });
+    }
+
+    public static boolean isPreviewBoxHovered(float guiLeft, float guiTop, int mouseX, int mouseY) {
+        float left = guiLeft + PREVIEW_BOX_X;
+        float top = guiTop + PREVIEW_BOX_Y;
+        float right = left + PREVIEW_BOX_WIDTH;
+        float bottom = top + PREVIEW_BOX_HEIGHT;
+        return mouseX >= left && mouseX < right && mouseY >= top && mouseY < bottom;
+    }
+
+    public static void adjustPreviewZoom(EntityLiving mob, int scroll) {
+        float zoomDelta = scroll > 0 ? PREVIEW_ZOOM_STEP : -PREVIEW_ZOOM_STEP;
+        setPreviewZoom(mob, getPreviewZoom(mob) + zoomDelta);
+    }
+
+    private static float getPreviewZoom(EntityLiving mob) {
+        Float zoom = previewZooms.get(mob);
+        return zoom == null ? 1f : zoom;
+    }
+
+    private static void setPreviewZoom(EntityLiving mob, float zoom) {
+        if (zoom < PREVIEW_ZOOM_MIN) zoom = PREVIEW_ZOOM_MIN;
+        if (zoom > PREVIEW_ZOOM_MAX) zoom = PREVIEW_ZOOM_MAX;
+        previewZooms.put(mob, zoom);
     }
 }

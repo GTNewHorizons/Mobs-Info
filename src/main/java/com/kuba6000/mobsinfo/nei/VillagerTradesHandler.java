@@ -16,7 +16,6 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
@@ -261,36 +260,12 @@ public class VillagerTradesHandler extends TemplateRecipeHandler {
         try {
             EntityLiving e = currentRecipe.displayMob;
 
-            int mobx = 31, moby = 50;
             e.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
             e.lastTickPosX = e.posX;
             e.lastTickPosY = e.posY;
             e.lastTickPosZ = e.posZ;
 
-            org.lwjgl.util.Rectangle v = MobUtils.getMobSizeInGui(e, mobx, moby, 20);
-
-            // convert to local coordinate:
-            float ylocal = (v.getY() + v.getHeight()) - y;
-            float wantedy = 54.f;
-
-            float new_scale = (40.f / v.getHeight());
-            float new_scale_x = (38.f / v.getWidth());
-            if (new_scale_x < new_scale) new_scale = new_scale_x;
-
-            new_scale = (float) Math.round(20.f * new_scale) / 20.f;
-
-            float a = moby - ylocal;
-            float aa = a - (a * new_scale);
-            float aaa = (wantedy - ylocal) - aa;
-
-            // ARGS: x, y, scale, rot, rot, entity
-            GuiInventory.func_147046_a(
-                mobx,
-                (int) (moby + aaa),
-                Math.round(20.f * new_scale),
-                (x + mobx) - mouseX,
-                y + moby - 25 - mouseZ,
-                e);
+            MobUtils.renderMobPreview(e, x, y, mouseX, mouseZ);
 
         } catch (Throwable ex) {
             Tessellator tes = Tessellator.instance;
@@ -380,6 +355,19 @@ public class VillagerTradesHandler extends TemplateRecipeHandler {
                 ((VillagerCachedRecipe) arecipes.get(recipe)).onUpdate();
             }
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(GuiRecipe<?> gui, int scroll, int recipe) {
+        Point offset = gui.getRecipePosition(recipe);
+        Point mouse = GuiDraw.getMousePosition();
+        GuiContainerAccessor accessor = (GuiContainerAccessor) gui;
+        if (MobUtils
+            .isPreviewBoxHovered(accessor.getGuiLeft() + offset.x, accessor.getGuiTop() + offset.y, mouse.x, mouse.y)) {
+            MobUtils.adjustPreviewZoom(((VillagerCachedRecipe) arecipes.get(recipe)).displayMob, scroll);
+            return true;
+        }
+        return false;
     }
 
     @Override
