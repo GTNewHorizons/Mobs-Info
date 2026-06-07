@@ -207,12 +207,12 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
     public void drawForeground(int recipeID) {
         int y = 0, yshift = 10, x = 7;
 
-        GuiDraw.drawString(Translations.TITLE.get(), x, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
-        GuiDraw.drawString(Translations.FORMAT.get(), x, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
-        GuiDraw.drawString(Translations.FORMAT_1.get(), x, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
-        GuiDraw.drawString(Translations.FORMAT_2.get(), x, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
-        GuiDraw.drawString(Translations.FORMAT_3.get(), x, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
-        GuiDraw.drawString(Translations.FORMAT_4.get(), x + 20, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
+        GuiDraw.drawString(Translations.TITLE.get(), x, y += yshift, ColorUtils.textDefault.getColor(), false);
+        GuiDraw.drawString(Translations.FORMAT.get(), x, y += yshift, ColorUtils.textDefault.getColor(), false);
+        GuiDraw.drawString(Translations.FORMAT_1.get(), x, y += yshift, ColorUtils.textDefault.getColor(), false);
+        GuiDraw.drawString(Translations.FORMAT_2.get(), x, y += yshift, ColorUtils.textDefault.getColor(), false);
+        GuiDraw.drawString(Translations.FORMAT_3.get(), x, y += yshift, ColorUtils.textDefault.getColor(), false);
+        GuiDraw.drawString(Translations.FORMAT_4.get(), x + 20, y += yshift, ColorUtils.textDefault.getColor(), false);
 
         {
             x = 6;
@@ -223,7 +223,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
                     Translations.ELITE.get(recipe.eliteChance * 100d, 100d),
                     x,
                     y,
-                    EnumColors.TEXT_DEFAULT.getColor(),
+                    ColorUtils.textDefault.getColor(),
                     false);
                 y += yshift + ((recipe.eliteCount - 1) / itemsPerRow) * 18;
             }
@@ -232,7 +232,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
                     Translations.ULTRA.get(recipe.ultraChance * recipe.eliteChance * 100d, recipe.ultraChance * 100d),
                     x,
                     y,
-                    EnumColors.TEXT_DEFAULT.getColor(),
+                    ColorUtils.textDefault.getColor(),
                     false);
                 y += yshift + ((recipe.ultraCount - 1) / itemsPerRow) * 18;
             }
@@ -243,7 +243,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
                         recipe.infernoChance * recipe.ultraChance * 100d),
                     x,
                     y,
-                    EnumColors.TEXT_DEFAULT.getColor(),
+                    ColorUtils.textDefault.getColor(),
                     false);
             }
         }
