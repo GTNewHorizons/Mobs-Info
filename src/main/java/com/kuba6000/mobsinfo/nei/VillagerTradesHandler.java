@@ -302,11 +302,11 @@ public class VillagerTradesHandler extends TemplateRecipeHandler {
             NAME.get() + currentRecipe.profession,
             x,
             y += yshift,
-            ColorUtils.textDefault.getColor(),
+            EnumColors.TEXT_DEFAULT.getColor(),
             false);
         if (Minecraft.getMinecraft().gameSettings.advancedItemTooltips && NEIClientUtils.shiftKey()) GuiDraw
-            .drawString("ID: " + currentRecipe.professionID, x, y += yshift, ColorUtils.textDefault.getColor(), false);
-        GuiDraw.drawString(MOD.get() + currentRecipe.mod, x, y += yshift, ColorUtils.textDefault.getColor(), false);
+            .drawString("ID: " + currentRecipe.professionID, x, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
+        GuiDraw.drawString(MOD.get() + currentRecipe.mod, x, y += yshift, EnumColors.TEXT_DEFAULT.getColor(), false);
 
     }
 

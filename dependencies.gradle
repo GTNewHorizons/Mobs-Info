@@ -71,5 +71,4 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:reliquary-reincarnations-241319:2323453"))
     compileOnly(deobf("https://github.com/Roadhog360/Et-Futurum-Requiem/releases/download/2.5.1/Et_Futurum_Requiem-2.5.1+nomixin.jar", "Et Futurum Requiem"))
     compileOnly(deobf("https://dl.dropboxusercontent.com/s/c35c42xm0y6pq83/%5B1.7.10%5DDQRmod%20ver0.9.4.8a_%239-i.jar", "DQRespect"))
-    shadowImplementation("com.github.GTNewHorizons:GTNHLib:0.11.5")
 }
