@@ -163,7 +163,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
     @Override
     public void onUpdate() {
         cycleTicksStatic++;
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiRecipe<?>guiRecipe) {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiRecipe<?>guiRecipe && guiRecipe.getHandler() == this) {
             for (Integer recipe : guiRecipe.getRecipeIndices()) {
                 ((InfernalRecipe) arecipes.get(recipe)).onUpdate();
             }
