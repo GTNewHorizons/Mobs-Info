@@ -192,6 +192,7 @@ public class ForbiddenMagic implements IExtraLoader {
                     null,
                     false,
                     false);
+                drop3.chanceModifiers.addAll(Arrays.asList(new IChanceModifier.DropsOnlyInDimension(-1 /* NETHER */)));
                 drops.add(drop3);
             }
 
