@@ -39,9 +39,9 @@ public class Minecraft implements IExtraLoader {
                     new MinecraftMagmaCube()));
         } else
             if (recipe.entity.getClass() == EntityVillager.class || recipe.entity.getClass() == EntityIronGolem.class) {
-                recipe.spawnList.add(new SpawnInfo.SpawnInfoStructure("Village"));
+                recipe.spawnList.add(SpawnInfo.ofStructure("Village"));
             } else if (k.equals("witherSkeleton")) {
-                recipe.spawnList.add(new SpawnInfo.SpawnInfoStructure("Nether Fortress"));
+                recipe.spawnList.add(SpawnInfo.ofStructure("Nether Fortress"));
             } else if (recipe.entity.getClass() == EntityDragon.class) {
                 recipe.spawnList.add(new SpawnInfo.SpawnInfoEvent("Enter END"));
             }

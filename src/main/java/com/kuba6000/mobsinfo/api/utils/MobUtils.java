@@ -171,25 +171,21 @@ public class MobUtils {
                     case GL11.GL_BITMAP_TOKEN:
                     case GL11.GL_DRAW_PIXEL_TOKEN:
                     case GL11.GL_COPY_PIXEL_TOKEN: {
-                        float[] pos = new float[2];
-                        buffer.get(pos);
-                        float pos_x = pos[0];
+                        float pos_x = buffer.get();
                         if (pos_x < minx) minx = pos_x;
                         if (pos_x > maxx) maxx = pos_x;
-                        float pos_y = pos[1];
+                        float pos_y = buffer.get();
                         if (pos_y < miny) miny = pos_y;
                         if (pos_y > maxy) maxy = pos_y;
                         break;
                     }
                     case GL11.GL_LINE_TOKEN:
                     case GL11.GL_LINE_RESET_TOKEN: {
-                        float[] pos = new float[4];
-                        buffer.get(pos);
-                        for (int i = 0; i < pos.length; i += 2) {
-                            float pos_x = pos[i];
+                        for (int i = 0; i < 2; i++) {
+                            float pos_x = buffer.get();
                             if (pos_x < minx) minx = pos_x;
                             if (pos_x > maxx) maxx = pos_x;
-                            float pos_y = pos[i + 1];
+                            float pos_y = buffer.get();
                             if (pos_y < miny) miny = pos_y;
                             if (pos_y > maxy) maxy = pos_y;
                         }
@@ -197,13 +193,11 @@ public class MobUtils {
                     }
                     case GL11.GL_POLYGON_TOKEN: {
                         int len = (int) buffer.get();
-                        float[] pos = new float[len * 2];
-                        buffer.get(pos);
-                        for (int i = 0; i < pos.length; i += 2) {
-                            float pos_x = pos[i];
+                        for (int i = 0; i < len; i++) {
+                            float pos_x = buffer.get();
                             if (pos_x < minx) minx = pos_x;
                             if (pos_x > maxx) maxx = pos_x;
-                            float pos_y = pos[i + 1];
+                            float pos_y = buffer.get();
                             if (pos_y < miny) miny = pos_y;
                             if (pos_y > maxy) maxy = pos_y;
                         }

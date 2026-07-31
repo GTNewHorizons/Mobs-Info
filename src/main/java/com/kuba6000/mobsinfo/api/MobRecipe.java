@@ -123,7 +123,7 @@ public class MobRecipe {
                     .biomeSpawnListRegistry();
                 for (BiomeGenBase biome : biomeList) {
                     if (biome == null) continue;
-                    new SpawnInfo.SpawnInfoBiome(biome);
+                    SpawnInfo.ofBiome(biome);
                     for (SpawnListEntry spawnListEntry : biomeSpawnListRegistry
                         .getSpawnListFor(BiomeHelper.getPackageName(biome))) {
                         LivingHandler handler = spawnListEntry.getLivingHandler();
@@ -146,7 +146,7 @@ public class MobRecipe {
                     .structureHandlerRegistry();
                 for (StructureHandler registryhandler : registry.handlers()) {
                     for (String structureKey : registryhandler.getStructureKeys()) {
-                        new SpawnInfo.SpawnInfoStructure(structureKey);
+                        SpawnInfo.ofStructure(structureKey);
                         for (SpawnListEntry spawnListEntry : registryhandler.getStructureSpawnList(structureKey)) {
                             LivingHandler handler = spawnListEntry.getLivingHandler();
                             if (!handler.namedJASSpawnables.isEmpty()) {
@@ -174,7 +174,7 @@ public class MobRecipe {
             for (BiomeGenBase biome : biomeList) {
                 if (biome == null) continue;
                 // make sure to create known place
-                new SpawnInfo.SpawnInfoBiome(biome);
+                SpawnInfo.ofBiome(biome);
                 for (EnumCreatureType type : EnumCreatureType.values()) {
                     List<BiomeGenBase.SpawnListEntry> spawnableList = (List<BiomeGenBase.SpawnListEntry>) biome
                         .getSpawnableList(type);
@@ -193,13 +193,13 @@ public class MobRecipe {
         spawnList = new HashSet<>();
         if (ar != null) {
             for (Pair<BiomeGenBase, BiomeGenBase.SpawnListEntry> entry : ar) {
-                spawnList.add(new SpawnInfo.SpawnInfoBiome(entry.getKey()));
+                spawnList.add(SpawnInfo.ofBiome(entry.getKey()));
             }
         }
         ArrayList<String> structs = MobNameToStructureList.get(this.entityName);
         if (structs != null) {
             for (String struct : structs) {
-                spawnList.add(new SpawnInfo.SpawnInfoStructure(struct));
+                spawnList.add(SpawnInfo.ofStructure(struct));
             }
         }
 

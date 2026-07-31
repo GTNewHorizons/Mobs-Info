@@ -21,6 +21,8 @@
 package com.kuba6000.mobsinfo.api;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,6 +35,18 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class ConstructableItemStack {
+
+    /**
+     * Caches {@link GameRegistry#findUniqueIdentifierFor(Item)}, which otherwise reallocates a new
+     * UniqueIdentifier (and its split Strings) on every call. Item has no equals/hashCode override,
+     * so identity keying is safe. ConcurrentHashMap because drops can be rebuilt off the netty thread.
+     */
+    private static final Map<Item, GameRegistry.UniqueIdentifier> IDENTIFIER_CACHE = new ConcurrentHashMap<>();
+
+    private static GameRegistry.UniqueIdentifier identifierFor(Item item) {
+        if (item == null) return null;
+        return IDENTIFIER_CACHE.computeIfAbsent(item, GameRegistry::findUniqueIdentifierFor);
+    }
 
     public final GameRegistry.UniqueIdentifier itemIdentifier;
     public final int meta;
@@ -48,7 +62,7 @@ public class ConstructableItemStack {
     }
 
     public ConstructableItemStack(ItemStack stack) {
-        itemIdentifier = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+        itemIdentifier = identifierFor(stack.getItem());
         meta = stack.getItemDamage();
         size = stack.stackSize;
         tagCompound = stack.stackTagCompound;
