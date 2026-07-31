@@ -33,7 +33,10 @@ import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
@@ -169,6 +172,24 @@ public class MobHandler extends TemplateRecipeHandler {
     private static int itemsYStart = itemsYStartMin;
     private static int lastArmorTick = 0;
 
+    /**
+     * Caches constant tooltip lines and chance-line Strings ("100%" etc.) per rebuild instead of
+     * per drop. Rebuilt (not static) so locale changes apply: {@link #clearRecipes()} clears
+     * both caches before every rebuild.
+     */
+    private static final Map<Translations, String> resetLineCache = new EnumMap<>(Translations.class);
+    private static final Map<Integer, String> chanceLineCache = new HashMap<>();
+
+    private static String resetLine(Translations translation) {
+        return resetLineCache.computeIfAbsent(translation, t -> EnumChatFormatting.RESET + t.get());
+    }
+
+    private static String chanceLine(int chance) {
+        return chanceLineCache.computeIfAbsent(
+            chance,
+            c -> EnumChatFormatting.RESET + Translations.CHANCE.get(c == 0 ? "<0.01%" : (double) c / 100d));
+    }
+
     public static void addRecipe(EntityLiving e, List<MobDrop> drop) {
         List<MobPositionedStack> positionedStacks = new ArrayList<>();
         int xorigin = 7, xoffset = xorigin, yoffset = 12, normaldrops = 0, raredrops = 0, additionaldrops = 0,
@@ -214,6 +235,8 @@ public class MobHandler extends TemplateRecipeHandler {
 
     public static void clearRecipes() {
         cachedRecipes.clear();
+        resetLineCache.clear();
+        chanceLineCache.clear();
     }
 
     public static void sortCachedRecipes() {
@@ -768,20 +791,18 @@ public class MobHandler extends TemplateRecipeHandler {
             extraTooltip = new ArrayList<>();
 
             if (!drop.variableChance) {
-                extraTooltip.add(
-                    EnumChatFormatting.RESET
-                        + Translations.CHANCE.get(chance == 0 ? "<0.01%" : (double) chance / 100d));
+                extraTooltip.add(chanceLine(chance));
             } else {
                 for (IChanceModifier chanceModifier : drop.chanceModifiers) {
                     chanceModifier.applyTooltip(extraTooltip);
                 }
             }
-            if (drop.lootable) extraTooltip.add(EnumChatFormatting.RESET + Translations.LOOTABLE.get());
+            if (drop.lootable) extraTooltip.add(resetLine(Translations.LOOTABLE));
             if (drop.playerOnly) {
-                extraTooltip.add(EnumChatFormatting.RESET + Translations.PLAYER_ONLY.get());
+                extraTooltip.add(resetLine(Translations.PLAYER_ONLY));
             }
             if (drop.additionalInfo != null && !drop.additionalInfo.isEmpty()) extraTooltip.addAll(drop.additionalInfo);
-            extraTooltip.add(EnumChatFormatting.RESET + Translations.AVERAGE_REMINDER.get());
+            extraTooltip.add(resetLine(Translations.AVERAGE_REMINDER));
 
             setPermutationToRender(0);
         }
