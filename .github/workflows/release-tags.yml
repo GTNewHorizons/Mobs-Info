@@ -18,6 +18,7 @@ jobs:
     env:
       VERSION: ${{ github.ref_name }}
       RELEASE_VERSION: ${{ github.ref_name }}
+      UPSTREAM_REPOSITORY: kuba6000/Mobs-Info
       SNAPSHOT: ${{ endsWith(github.ref_name, '-snapshot') || contains(github.event.head_commit.message, '[snapshot]') }}
       PRERELEASE: ${{ endsWith(github.ref_name, '-pre') }}
       MAVEN_PUBLISHING_URL: ${{ vars.MAVEN_PUBLISHING_URL || 'https://nexus.gtnewhorizons.com/repository/releases/' }}
@@ -91,10 +92,53 @@ jobs:
             echo "Generating changelog notes..."
             export "CHANGELOG_FILE=$(mktemp --suffix=.md)"
             echo "CHANGELOG_FILE=${CHANGELOG_FILE}" >> $GITHUB_ENV
-            gh api --method POST -H "Accept: application/vnd.github+json" \
-              "/repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
-              -f tag_name="${RELEASE_VERSION}" \
-              --jq ".body" > "${CHANGELOG_FILE}"
+            NATIVE_CHANGELOG_FILE="$(mktemp --suffix=.md)"
+            UPSTREAM_ENTRIES_FILE="$(mktemp --suffix=.md)"
+            PREVIOUS_TAG="$(
+              gh api "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
+                --jq "map(select(.draft == false and .tag_name != \"${RELEASE_VERSION}\"))[0].tag_name"
+            )"
+
+            USE_PREVIOUS_TAG=false
+            if [[ -n "${PREVIOUS_TAG}" && "${PREVIOUS_TAG}" != "null" ]]; then
+              if ! git rev-parse --verify "${PREVIOUS_TAG}^{commit}" > /dev/null 2>&1; then
+                git fetch --no-tags --depth=1 origin \
+                  "refs/tags/${PREVIOUS_TAG}:refs/tags/${PREVIOUS_TAG}" \
+                  || echo "Previous tag could not be fetched; upstream entries will be skipped."
+              fi
+
+              if git merge-base --is-ancestor "${PREVIOUS_TAG}" "${RELEASE_VERSION}" 2> /dev/null; then
+                USE_PREVIOUS_TAG=true
+              else
+                echo "Previous tag is outside the available history; using GitHub's default release notes."
+              fi
+            else
+              echo "No previous release was found; using GitHub's default release notes."
+            fi
+
+            if [[ "${USE_PREVIOUS_TAG}" == "true" ]]; then
+              gh api --method POST -H "Accept: application/vnd.github+json" \
+                "/repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+                -f tag_name="${RELEASE_VERSION}" \
+                -f previous_tag_name="${PREVIOUS_TAG}" \
+                --jq ".body" > "${NATIVE_CHANGELOG_FILE}"
+
+              python3 scripts/generate_upstream_notes.py \
+                --upstream "${UPSTREAM_REPOSITORY}" \
+                --previous-tag "${PREVIOUS_TAG}" \
+                --current-tag "${RELEASE_VERSION}" \
+                > "${UPSTREAM_ENTRIES_FILE}"
+            else
+              gh api --method POST -H "Accept: application/vnd.github+json" \
+                "/repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+                -f tag_name="${RELEASE_VERSION}" \
+                --jq ".body" > "${NATIVE_CHANGELOG_FILE}"
+              : > "${UPSTREAM_ENTRIES_FILE}"
+            fi
+
+            python3 scripts/merge_release_notes.py \
+              "${NATIVE_CHANGELOG_FILE}" "${UPSTREAM_ENTRIES_FILE}" \
+              > "${CHANGELOG_FILE}"
           fi
           cat "${CHANGELOG_FILE}"
           gh release create "${RELEASE_VERSION}" -F "${CHANGELOG_FILE}" ${PRERELEASE_FLAG} ./build/libs/*.jar
