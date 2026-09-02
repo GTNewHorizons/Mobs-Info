@@ -32,7 +32,6 @@ import com.kuba6000.mobsinfo.api.IVillagerInfoProvider;
 import com.kuba6000.mobsinfo.api.RandomSequencer;
 import com.kuba6000.mobsinfo.api.VillagerRecipe;
 import com.kuba6000.mobsinfo.api.VillagerTrade;
-import com.kuba6000.mobsinfo.api.helper.ProgressBarWrapper;
 import com.kuba6000.mobsinfo.api.utils.GSONUtils;
 import com.kuba6000.mobsinfo.api.utils.ItemID;
 import com.kuba6000.mobsinfo.api.utils.ModUtils;
@@ -41,6 +40,7 @@ import com.kuba6000.mobsinfo.mixin.early.minecraft.VillagerRegistryAccessor;
 import com.kuba6000.mobsinfo.nei.VillagerTradesHandler;
 import com.kuba6000.mobsinfo.network.LoadConfigPacket;
 
+import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -110,9 +110,8 @@ public class VillagerTradesLoader {
                 VillagerTradesLoaderCacheStructure s = gson.fromJson(reader, VillagerTradesLoaderCacheStructure.class);
                 if (Config.MobHandler.regenerationTrigger == Config.MobHandler._CacheRegenerationTrigger.Never
                     || s.version.equals(modlistversion)) {
-                    ProgressBarWrapper bar = new ProgressBarWrapper(
-                        "Parsing cached Villager Trades Map",
-                        s.handlerList.size());
+                    ProgressManager.ProgressBar bar = ProgressManager
+                        .push("Parsing cached Villager Trades Map", s.handlerList.size());
                     for (Map.Entry<Integer, ArrayList<VillagerTradesLoaderCacheStructure.VillagerTradesLoaderCacheStructure_Handler>> entry : s.handlerList
                         .entrySet()) {
                         int profession = entry.getKey();
@@ -145,7 +144,7 @@ public class VillagerTradesLoader {
                             VillagerRecipe.recipes.put(profession, new VillagerRecipe(trades, profession, villager));
                         } catch (Exception ignored) {}
                     }
-                    bar.end();
+                    ProgressManager.pop(bar);
                     LOG.info("Parsed cached map, skipping generation");
                     MobRecipeLoader.isInGenerationProcess = false;
                     return;
@@ -172,7 +171,7 @@ public class VillagerTradesLoader {
         final ArrayList<Integer> villagerIDs = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4));
         villagerIDs.addAll(VillagerRegistry.getRegisteredVillagers());
 
-        ProgressBarWrapper bar = new ProgressBarWrapper("Generating Villager Traders Map", villagerIDs.size());
+        ProgressManager.ProgressBar bar = ProgressManager.push("Generating Villager Traders Map", villagerIDs.size());
 
         for (final int id : villagerIDs) {
             bar.step("Profession " + id);
@@ -264,7 +263,7 @@ public class VillagerTradesLoader {
         }
         MobRecipeLoader.isInGenerationProcess = false;
 
-        bar.end();
+        ProgressManager.pop(bar);
 
         final long endTime = System.currentTimeMillis();
         LOG.info(

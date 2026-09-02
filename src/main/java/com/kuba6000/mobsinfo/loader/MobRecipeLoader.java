@@ -76,7 +76,6 @@ import com.kuba6000.mobsinfo.api.event.PostMobRegistrationEvent;
 import com.kuba6000.mobsinfo.api.event.PostMobsRegistrationEvent;
 import com.kuba6000.mobsinfo.api.event.PreMobRegistrationEvent;
 import com.kuba6000.mobsinfo.api.event.PreMobsRegistrationEvent;
-import com.kuba6000.mobsinfo.api.helper.ProgressBarWrapper;
 import com.kuba6000.mobsinfo.api.utils.FastRandom;
 import com.kuba6000.mobsinfo.api.utils.GSONUtils;
 import com.kuba6000.mobsinfo.api.utils.ItemID;
@@ -95,6 +94,7 @@ import com.mojang.authlib.GameProfile;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import thaumcraft.common.items.wands.ItemWandCasting;
@@ -357,7 +357,8 @@ public class MobRecipeLoader {
                 MobRecipeLoaderCacheStructure s = gson.fromJson(reader, MobRecipeLoaderCacheStructure.class);
                 if (Config.MobHandler.regenerationTrigger == Config.MobHandler._CacheRegenerationTrigger.Never
                     || s.version.equals(modlistversion)) {
-                    ProgressBarWrapper bar = new ProgressBarWrapper("Parsing cached Mob Recipe Map", s.moblist.size());
+                    ProgressManager.ProgressBar bar = ProgressManager
+                        .push("Parsing cached Mob Recipe Map", s.moblist.size());
                     for (Map.Entry<String, ArrayList<MobDrop>> entry : s.moblist.entrySet()) {
                         String mobName = entry.getKey();
                         bar.step(mobName);
@@ -402,7 +403,7 @@ public class MobRecipeLoader {
                             }
                         } catch (Exception ignored) {}
                     }
-                    bar.end();
+                    ProgressManager.pop(bar);
                     LOG.info("Parsed cached map, skipping generation");
                     isInGenerationProcess = false;
                     return;
@@ -428,9 +429,8 @@ public class MobRecipeLoader {
 
         boolean registeringWitherSkeleton = !EntityList.stringToClassMapping.containsKey("witherSkeleton");
         if (registeringWitherSkeleton) EntityList.stringToClassMapping.put("witherSkeleton", EntitySkeleton.class);
-        ProgressBarWrapper bar = new ProgressBarWrapper(
-            "Generating Mob Recipe Map",
-            EntityList.stringToClassMapping.size());
+        ProgressManager.ProgressBar bar = ProgressManager
+            .push("Generating Mob Recipe Map", EntityList.stringToClassMapping.size());
         EntityList.stringToClassMapping.forEach((name, entity) -> {
             bar.step(name);
             if (entity == null) return;
@@ -875,7 +875,7 @@ public class MobRecipeLoader {
 
         LOG.info("Recipe map generated! Mapped " + GeneralMobList.size() + " entities! It took " + time + "ms");
 
-        bar.end();
+        ProgressManager.pop(bar);
 
         isInGenerationProcess = false;
 
