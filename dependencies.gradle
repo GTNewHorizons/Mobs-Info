@@ -43,7 +43,6 @@ dependencies {
     api("com.github.GTNewHorizons:NotEnoughItems:2.8.117-GTNH:dev")
     devOnlyNonPublishable("com.github.GTNewHorizons:EnderIO:2.10.35:dev")
     devOnlyNonPublishable(rfg.deobf("curse.maven:Infernal-Mobs-227875:2227584"))
-    compileOnly("com.github.GTNewHorizons:BetterLoadingScreen:1.7.9-GTNH:dev") { transitive = false }
     compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:CraftTweaker:3.4.8:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:Draconic-Evolution:1.5.30-GTNH:dev") { transitive = false }
