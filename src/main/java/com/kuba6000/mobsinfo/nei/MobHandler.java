@@ -100,6 +100,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.objects.ItemData;
+import gregtech.api.util.GTOreDictUnificator;
 
 public class MobHandler extends TemplateRecipeHandler {
 
@@ -972,8 +973,9 @@ public class MobHandler extends TemplateRecipeHandler {
                 ArrayList<ItemStack> tResults = new ArrayList<>();
                 tResults.add(aResult);
                 tResults.add((ItemStack) get.invoke(null, true, aResult));
-                if ((tPrefixMaterial != null) && (!tPrefixMaterial.mBlackListed)
-                    && (!tPrefixMaterial.mPrefix.mFamiliarPrefixes.isEmpty())) {
+                if (tPrefixMaterial != null && tPrefixMaterial.hasValidPrefixMaterialData()
+                    && !GTOreDictUnificator.isBlacklisted(aResult)
+                    && !tPrefixMaterial.mPrefix.mFamiliarPrefixes.isEmpty()) {
                     for (OrePrefixes tPrefix : tPrefixMaterial.mPrefix.mFamiliarPrefixes) {
                         tResults.add(
                             (ItemStack) getWithMaterial.invoke(null, tPrefix, tPrefixMaterial.mMaterial.mMaterial, 1L));
