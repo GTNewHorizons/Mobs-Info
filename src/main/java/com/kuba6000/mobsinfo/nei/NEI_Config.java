@@ -24,6 +24,7 @@ import static com.kuba6000.mobsinfo.MobsInfo.MODNAME;
 
 import net.minecraft.item.Item;
 
+import com.kuba6000.mobsinfo.MobsInfo;
 import com.kuba6000.mobsinfo.Tags;
 import com.kuba6000.mobsinfo.api.LoaderReference;
 import com.kuba6000.mobsinfo.api.MobRecipe;
@@ -31,18 +32,17 @@ import com.kuba6000.mobsinfo.config.Config;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
+import codechicken.nei.recipe.TemplateRecipeHandler;
+import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class NEI_Config implements IConfigureNEI {
 
-    public static boolean isAdded = true;
-
     @Override
     public void loadConfig() {
-        isAdded = false;
-        new MobHandler();
-        if (LoaderReference.InfernalMobs.isLoaded) new MobHandlerInfernal();
-        new VillagerTradesHandler();
-        isAdded = true;
+        registerHandler(new MobHandler());
+        if (LoaderReference.InfernalMobs.isLoaded) registerHandler(new MobHandlerInfernal());
+        registerHandler(new VillagerTradesHandler());
+        registerHandler(new MobHandlerFishing());
 
         if (LoaderReference.EnderIO.isLoaded && Config.Compatibility.addAllEnderIOSpawnersToNEI) {
             for (String s : MobRecipe.MobNameToRecipeMap.keySet()) {
@@ -51,6 +51,16 @@ public class NEI_Config implements IConfigureNEI {
                     EnderIOGetter.BlockPoweredSpawner$createItemStackForMob(s));
             }
         }
+    }
+
+    private static void registerHandler(TemplateRecipeHandler handler) {
+        FMLInterModComms.sendRuntimeMessage(
+            MobsInfo.instance,
+            "NEIPlugins",
+            "register-crafting-handler",
+            "MobsInfo@" + handler.getRecipeName() + "@" + handler.getOverlayIdentifier());
+        API.registerRecipeHandler(handler);
+        API.registerUsageHandler(handler);
     }
 
     @Override

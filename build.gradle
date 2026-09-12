@@ -3,3 +3,65 @@
 plugins {
     id 'com.gtnewhorizons.gtnhconvention'
 }
+
+afterEvaluate {
+    tasks.named('publishCurseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge).configure { task ->
+        def artifacts = task.uploadArtifacts
+        if (artifacts.isEmpty()) {
+            throw new GradleException('publishCurseforge has no upload artifacts; cannot add CurseForge environment tags')
+        }
+        artifacts.each { artifact ->
+            artifact.addEnvironment('Client', 'Server')
+        }
+    }
+}
+
+if (project.hasProperty('mobBlacklistIntegration')) {
+    def fixtureJar = tasks.register('mobBlacklistFixtureJar', Jar) {
+        from sourceSets.test.output
+        include 'com/kuba6000/mobsinfo/blacklistintegration/**'
+        archiveClassifier = 'mob-blacklist-fixture'
+    }
+    dependencies {
+        runtimeOnlyNonPublishable(files(fixtureJar))
+    }
+    tasks.named('runServer') {
+        systemProperty 'mobsinfo.mobBlacklistIntegration', project.property('mobBlacklistIntegration')
+    }
+}
+
+if (project.hasProperty('villagerTradeIntegration')) {
+    def fixtureJar = tasks.register('villagerTradeFixtureJar', Jar) {
+        from sourceSets.test.output
+        include 'com/kuba6000/mobsinfo/villagerintegration/**'
+        archiveClassifier = 'villager-trade-fixture'
+    }
+    dependencies {
+        runtimeOnlyNonPublishable(files(fixtureJar))
+    }
+    tasks.named('runServer') {
+        systemProperty 'mobsinfo.villagerTradeIntegration', project.property('villagerTradeIntegration')
+    }
+}
+
+// Optional mods are needed when resolving Minecraft-facing types in integration tests.
+tasks.withType(Test).configureEach {
+    useJUnit()
+    classpath += sourceSets.main.compileClasspath
+    systemProperty 'net.bytebuddy.experimental', 'true'
+    if (project.hasProperty('reliquaryTestJars')) {
+        systemProperty 'reliquaryTestJars', project.property('reliquaryTestJars')
+    }
+}
+
+// Opt-in Forge integration fixture; never included in a published mod.
+if (project.hasProperty('generationBudgetIntegration')) {
+    def fixtureJar = tasks.register('generationBudgetFixtureJar', Jar) {
+        from sourceSets.test.output
+        include 'com/kuba6000/mobsinfo/integration/**'
+        archiveClassifier = 'generation-budget-fixture'
+    }
+    dependencies {
+        runtimeOnlyNonPublishable(files(fixtureJar))
+    }
+}

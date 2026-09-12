@@ -39,6 +39,8 @@ public class IMCForNEI {
             sendHandler("mobsinfo.mobhandlerinfernal", "minecraft:diamond_sword", 168, 332, 1, 6);
             sendCatalyst("mobsinfo.mobhandlerinfernal", "minecraft:diamond_sword");
         }
+        sendHandler("mobsinfo.mobhandlerfishing", "minecraft:fishing_rod", 168, 332, 1, 6);
+        sendCatalyst("mobsinfo.mobhandlerfishing", "minecraft:fishing_rod");
         sendHandler("mobsinfo.villagertradeshandler", "minecraft:emerald", 168, 332, 1, 6);
         sendCatalyst("mobsinfo.villagertradeshandler", "minecraft:emerald");
         sendCatalyst("mobsinfo.villagertradeshandler", "minecraft:spawn_egg:120");

@@ -32,6 +32,7 @@ public class Config {
 
         MOB_HANDLER("MobHandler"),
         VILLAGER_TRADES_HANDLER("VillagerTradesHandler"),
+        FISHING_HANDLER("FishingHandler"),
         DEBUG("Debug"),
         COMPATIBILITY("Compatibility");
 
@@ -70,6 +71,8 @@ public class Config {
         public static _CacheRegenerationTrigger regenerationTrigger = _CacheRegenerationTrigger.ModAdditionRemovalChange;
         public static boolean includeEmptyMobs = true;
         public static double mobTimeout = 10d;
+        public static boolean optimizeRandomComparisons = true;
+        public static int maxEstimatedPathsPerMobPass = 10_000_000;
         public static String[] mobBlacklist;
         public static boolean hiddenMode = false;
 
@@ -107,18 +110,32 @@ public class Config {
                 .getDouble();
             if (mobTimeout < 0) mobTimeout = Double.MAX_VALUE;
 
-            mobBlacklist = configuration
+            optimizeRandomComparisons = configuration
                 .get(
                     category.get(),
-                    "MobBlacklist",
-                    new String[] { "Giant", "Thaumcraft.TravelingTrunk", "chisel.snowman", "OpenBlocks.Luggage",
-                        "OpenBlocks.MiniMe", "SpecialMobs.SpecialCreeper", "SpecialMobs.SpecialZombie",
-                        "SpecialMobs.SpecialPigZombie", "SpecialMobs.SpecialSlime", "SpecialMobs.SpecialSkeleton",
-                        "SpecialMobs.SpecialEnderman", "SpecialMobs.SpecialCaveSpider", "SpecialMobs.SpecialGhast",
-                        "SpecialMobs.SpecialWitch", "SpecialMobs.SpecialSpider", "TwilightForest.HydraHead",
-                        "TwilightForest.RovingCube", "TwilightForest.Harbinger Cube", "TwilightForest.Adherent",
-                        "SpecialMobs.SpecialSilverfish", },
-                    "These mobs will be skipped when generating recipe map")
+                    "OptimizeRandomComparisons",
+                    true,
+                    "Group equivalent outcomes of direct Random comparisons when generating mob drops.")
+                .getBoolean();
+            maxEstimatedPathsPerMobPass = configuration.get(
+                category.get(),
+                "MaxEstimatedPathsPerMobPass",
+                10_000_000,
+                "Skip a drop category/Looting variant as soon as its estimated path count exceeds this value. Zero or negative disables this estimate limit. Replaces MaxPathsPerMobPass.")
+                .getInt();
+
+            mobBlacklist = configuration.get(
+                category.get(),
+                "MobBlacklist",
+                new String[] { "Giant", "Thaumcraft.TravelingTrunk", "chisel.snowman", "OpenBlocks.Luggage",
+                    "OpenBlocks.MiniMe", "SpecialMobs.SpecialCreeper", "SpecialMobs.SpecialZombie",
+                    "SpecialMobs.SpecialPigZombie", "SpecialMobs.SpecialSlime", "SpecialMobs.SpecialSkeleton",
+                    "SpecialMobs.SpecialEnderman", "SpecialMobs.SpecialCaveSpider", "SpecialMobs.SpecialGhast",
+                    "SpecialMobs.SpecialWitch", "SpecialMobs.SpecialSpider", "TwilightForest.HydraHead",
+                    "TwilightForest.RovingCube", "TwilightForest.Harbinger Cube", "TwilightForest.Adherent",
+                    "SpecialMobs.SpecialSilverfish", },
+                "These mobs are skipped during recipe generation and cache loading. "
+                    + "The client's blacklist also applies when joining a server. Restart the game after changing it.")
                 .getStringList();
 
             hiddenMode = configuration
@@ -134,11 +151,46 @@ public class Config {
     public static class VillagerTradesHandler {
 
         public static boolean enabled = true;
+        public static boolean optimizeRandomComparisons = true;
+        public static double handlerTimeout = 10d;
+        public static int maxEstimatedPathsPerHandler = 10_000_000;
 
         private static void load(Configuration configuration) {
             Category category = Category.VILLAGER_TRADES_HANDLER;
 
             enabled = configuration.get(category.get(), "Enabled", true, "Show villager trades in NEI")
+                .getBoolean();
+            optimizeRandomComparisons = configuration
+                .get(
+                    category.get(),
+                    "OptimizeRandomComparisons",
+                    true,
+                    "Group equivalent outcomes of direct Random comparisons when generating villager trades.")
+                .getBoolean();
+            handlerTimeout = configuration
+                .get(
+                    category.get(),
+                    "HandlerTimeout",
+                    10d,
+                    "Seconds allowed per trade handler and profession. Negative disables the time limit.")
+                .getDouble();
+            maxEstimatedPathsPerHandler = configuration.get(
+                category.get(),
+                "MaxEstimatedPathsPerHandler",
+                10_000_000,
+                "Skip a trade handler/profession as soon as its estimated path count exceeds this value. Zero or negative disables this estimate limit. Replaces MaxPathsPerHandler.")
+                .getInt();
+        }
+    }
+
+    public static class FishingHandler {
+
+        public static boolean enabled = true;
+
+        private static void load(Configuration configuration) {
+            Category category = Category.FISHING_HANDLER;
+
+            enabled = configuration.get(category.get(), "Enabled", true, "Show fishing drops in NEI")
                 .getBoolean();
         }
     }
@@ -215,6 +267,7 @@ public class Config {
 
         MobHandler.load(configuration);
         VillagerTradesHandler.load(configuration);
+        FishingHandler.load(configuration);
         Debug.load(configuration);
         Compatibility.load(configuration);
 

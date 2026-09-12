@@ -75,6 +75,11 @@ You can turn various features on and off in there including:
 - Show all EnderIO spawners in NEI!
 - Mob blacklist
 
+Mob drop generation groups equivalent results of direct random comparisons to
+reduce the number of executions. See the [generation design and configuration](docs/drop-generation-optimization.md)
+for supported patterns, limits, diagnostics, and compatibility switches.
+Villager handlers use the same optimization with [separate trade settings](docs/villager-trade-generation.md).
+
 ## Override Config
 Sometimes there are cases where it is impossible to generate loot that the mob gives.
 In this cases you can manually edit the information on the page with the override config.

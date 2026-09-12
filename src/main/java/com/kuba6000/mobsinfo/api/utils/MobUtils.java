@@ -209,12 +209,6 @@ public class MobUtils {
                     }
                 }
             }
-        } else if (entries == -1) {
-            buffer = BufferUtils.createFloatBuffer(buffer.capacity() << 2);
-            System.gc();
-            float x = matrixBuffer.get(12);
-            float y = matrixBuffer.get(13);
-            return new Rectangle((int) x, (int) y, 48, 54);
         }
 
         float height_in_pixels = maxy - miny;
@@ -239,6 +233,13 @@ public class MobUtils {
 
         // noinspection StatementWithEmptyBody
         while ((GL11.glGetError()) != GL11.GL_NO_ERROR);
+
+        if (entries == -1) {
+            buffer = BufferUtils.createFloatBuffer(buffer.capacity() << 2);
+            float x = matrixBuffer.get(12);
+            float y = matrixBuffer.get(13);
+            return new Rectangle((int) x, (int) y, 48, 54);
+        }
 
         return new Rectangle(
             (int) (minx / scale.getScaleFactor()),

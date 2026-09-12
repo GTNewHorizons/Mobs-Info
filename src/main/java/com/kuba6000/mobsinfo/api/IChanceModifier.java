@@ -85,8 +85,8 @@ public interface IChanceModifier {
         String className = ByteBufHelper.readString(byteBuf);
         Class<?> cl;
         try {
-            cl = Class.forName(className, false, null);
-            if (!cl.isAssignableFrom(IChanceModifier.class)) {
+            cl = Class.forName(className, false, IChanceModifier.class.getClassLoader());
+            if (!IChanceModifier.class.isAssignableFrom(cl)) {
                 throw new SecurityException();
             }
             Constructor<? extends IChanceModifier> constructor = (Constructor<? extends IChanceModifier>) cl
@@ -94,11 +94,11 @@ public interface IChanceModifier {
             constructor.setAccessible(true);
             IChanceModifier modifier = constructor.newInstance();
             modifier.readFromByteBuf(byteBuf);
+            return modifier;
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException
             | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     class NormalChance implements IChanceModifier {

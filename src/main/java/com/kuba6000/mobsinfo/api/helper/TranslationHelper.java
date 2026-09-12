@@ -13,8 +13,9 @@ public class TranslationHelper {
         List<String> replacements = new ArrayList<>();
         for (Object arg : args) {
             if (arg instanceof Double || arg instanceof Float) {
-                if ((double) arg > 0.05d || (double) arg == 0d) replacements.add("%.2f");
-                else if ((double) arg > 0.0005) replacements.add("%.4f");
+                double val = ((Number) arg).doubleValue();
+                if (val > 0.05d || val == 0d) replacements.add("%.2f");
+                else if (val > 0.0005) replacements.add("%.4f");
                 else replacements.add("%.8f");
             } else replacements.add("%s");
         }

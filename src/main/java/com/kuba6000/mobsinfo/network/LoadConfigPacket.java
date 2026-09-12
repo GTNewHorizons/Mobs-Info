@@ -73,6 +73,7 @@ public class LoadConfigPacket implements IMessage {
                 villagersToLoad.add(buf.readInt());
             }
         }
+        Config.FishingHandler.enabled = buf.readBoolean();
     }
 
     @Override
@@ -102,6 +103,7 @@ public class LoadConfigPacket implements IMessage {
             buf.writeInt(villagersToLoad.size());
             villagersToLoad.forEach(buf::writeInt);
         }
+        buf.writeBoolean(Config.FishingHandler.enabled);
     }
 
     public static class Handler implements IMessageHandler<LoadConfigPacket, IMessage> {
