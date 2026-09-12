@@ -4,18 +4,6 @@ plugins {
     id 'com.gtnewhorizons.gtnhconvention'
 }
 
-afterEvaluate {
-    tasks.named('publishCurseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge).configure { task ->
-        def artifacts = task.uploadArtifacts
-        if (artifacts.isEmpty()) {
-            throw new GradleException('publishCurseforge has no upload artifacts; cannot add CurseForge environment tags')
-        }
-        artifacts.each { artifact ->
-            artifact.addEnvironment('Client', 'Server')
-        }
-    }
-}
-
 if (project.hasProperty('mobBlacklistIntegration')) {
     def fixtureJar = tasks.register('mobBlacklistFixtureJar', Jar) {
         from sourceSets.test.output

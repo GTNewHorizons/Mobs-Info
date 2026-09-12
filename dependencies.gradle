@@ -85,10 +85,8 @@ dependencies {
     gtnhlibEmbed("com.github.GTNewHorizons:GTNHLib:0.11.44:dev") { transitive = false }
 }
 
-def gtnhlibEmbed = configurations.gtnhlibEmbed
-def unzip = this.&zipTree
-tasks.named('jar', Jar) {
-    from({ gtnhlibEmbed.collect { unzip(it) } }) {
+tasks.jar {
+    from({ project.configurations.getByName('gtnhlibEmbed').collect { zipTree(it) } }) {
         include 'com/gtnewhorizon/gtnhlib/color/ColorResource*.class'
     }
 }
