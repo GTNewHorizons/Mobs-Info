@@ -60,6 +60,7 @@ public class VillagerTradesHandler extends TemplateRecipeHandler {
         MOD,
         CHANCE,
         REAL_CHANCE,
+        RECIPE_NAME,
 
         ;
 
@@ -173,7 +174,7 @@ public class VillagerTradesHandler extends TemplateRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return "Villager Trades";
+        return RECIPE_NAME.get();
     }
 
     public VillagerTradesHandler() {
