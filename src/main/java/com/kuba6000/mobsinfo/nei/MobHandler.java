@@ -125,6 +125,7 @@ public class MobHandler extends TemplateRecipeHandler {
         SPAWNS_IN,
         SPAWNS_NOT_IN,
         WITHER_SKELETON_NAME,
+        RECIPE_NAME,
 
         ;
 
@@ -606,7 +607,7 @@ public class MobHandler extends TemplateRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return "Mob Info";
+        return Translations.RECIPE_NAME.get();
     }
 
     @Override

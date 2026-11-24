@@ -30,11 +30,13 @@ mobsinfo.mobhandler.spawns_everywhere=Spawns everywhere
 mobsinfo.mobhandler.spawns_in=Spawns in %d places...
 mobsinfo.mobhandler.spawns_not_in=Spawns everywhere but %d places...
 mobsinfo.mobhandler.wither_skeleton_name=Wither Skeleton
+mobsinfo.mobhandler.recipe_name=Mob Info
 
 mobsinfo.villagertradeshandler.name=Name: 
 mobsinfo.villagertradeshandler.mod=Mod: 
 mobsinfo.villagertradeshandler.chance=Chance: %.2f%%
 mobsinfo.villagertradeshandler.real_chance=Chance per level up: %.2f%%
+mobsinfo.villagertradeshandler.recipe_name=Villager Trades
 
 mobsinfo.mobhandlerinfernal.title=Infernal Mobs - Drop Table
 mobsinfo.mobhandlerinfernal.format=Format:
@@ -47,6 +49,7 @@ mobsinfo.mobhandlerinfernal.ultra=Ultra drops - %.3f%% (%.2f%%)
 mobsinfo.mobhandlerinfernal.inferno=Inferno drops - %.3f%% (%.3f%%)
 mobsinfo.mobhandlerinfernal.tooltip_chance=Total chance to get: %.4f%%
 mobsinfo.mobhandlerinfernal.tooltip_chance_always=Total chance to get when always infernal: %.4f%%
+mobsinfo.mobhandlerinfernal.recipe_name=Infernal Drops
 
 mobsinfo.mobhandlerfishing.title=Fishing Loot Table
 mobsinfo.mobhandlerfishing.format=Format:
