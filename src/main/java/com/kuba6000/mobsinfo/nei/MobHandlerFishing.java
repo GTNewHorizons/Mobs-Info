@@ -8,10 +8,10 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;
 
@@ -29,7 +29,6 @@ import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.IUsageHandler;
 import codechicken.nei.recipe.RecipeCatalysts;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MobHandlerFishing extends TemplateRecipeHandler {
 
@@ -226,7 +225,7 @@ public class MobHandlerFishing extends TemplateRecipeHandler {
         private final double chance;
         private final WeightedRandomFishable fishable;
         private final Random random = new Random();
-        private boolean randomable = false;
+        private boolean randomable;
 
         public FishingPositionedStack(WeightedRandomFishable fishable, int x, int y, double chance) {
             super(fishable.field_150711_b, x, y, false);
@@ -238,24 +237,27 @@ public class MobHandlerFishing extends TemplateRecipeHandler {
 
         @Override
         public void setPermutationToRender(int index) {
-            if (fishable != null) {
-                if (!randomable) {
-                    item = fishable.field_150711_b.copy();
-                    return;
-                }
+            // PositionedStack's constructor calls this before fishable is assigned.
+            if (fishable == null) return;
+            if (randomable) {
                 try {
-                    item = fishable.func_150708_a(random);
+                    ItemStack preview = fishable.func_150708_a(random);
+                    if (preview != null && preview.getItem() != null) {
+                        item = preview;
+                        return;
+                    }
+                    LOG.warn(
+                        "Empty randomized fishing preview for item ID {}",
+                        Item.getIdFromItem(fishable.field_150711_b.getItem()));
                 } catch (Exception e) {
-                    item = fishable.field_150711_b.copy();
-                    GameRegistry.UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item.getItem());
-                    LOG.error(
-                        "Fishing permutation randomization failed on {}:{}, marking this item as not randomable! Printing stacktrace:",
-                        ui.toString(),
-                        this.item.getItemDamage());
-                    e.printStackTrace();
-                    randomable = false;
+                    LOG.warn(
+                        "Fishing preview failed for item ID {} ({})",
+                        Item.getIdFromItem(fishable.field_150711_b.getItem()),
+                        e.toString());
                 }
+                randomable = false;
             }
+            item = fishable.field_150711_b.copy();
         }
 
         @Override
@@ -299,10 +301,20 @@ public class MobHandlerFishing extends TemplateRecipeHandler {
             this.title = title;
             this.chance = chance;
             this.y = y;
-            rows = (entries.size() + itemsPerRow - 1) / itemsPerRow;
-            int totalWeight = WeightedRandom.getTotalWeight(entries);
-            for (int index = 0; index < entries.size(); index++) {
-                WeightedRandomFishable entry = entries.get(index);
+            // Hidden entries still contribute to Forge's roll when they have a weight.
+            long totalWeight = 0;
+            for (WeightedRandomFishable entry : entries) {
+                if (entry != null && entry.itemWeight > 0) totalWeight += entry.itemWeight;
+            }
+            for (int sourceIndex = 0; sourceIndex < entries.size(); sourceIndex++) {
+                WeightedRandomFishable entry = entries.get(sourceIndex);
+                if (entry == null || entry.field_150711_b == null
+                    || entry.field_150711_b.getItem() == null
+                    || entry.itemWeight <= 0) {
+                    LOG.warn("Skipping invalid fishing loot in {} at index {}", title.name(), sourceIndex);
+                    continue;
+                }
+                int index = stacks.size();
                 stacks.add(
                     new FishingPositionedStack(
                         entry,
@@ -310,6 +322,7 @@ public class MobHandlerFishing extends TemplateRecipeHandler {
                         y + 12 + (index / itemsPerRow) * itemYShift,
                         chance * entry.itemWeight / totalWeight));
             }
+            rows = (stacks.size() + itemsPerRow - 1) / itemsPerRow;
         }
     }
 
@@ -330,6 +343,7 @@ public class MobHandlerFishing extends TemplateRecipeHandler {
         private int addCategory(Translations title, double chance, List<WeightedRandomFishable> entries, int y) {
             if (entries.isEmpty()) return y;
             FishingCategory category = new FishingCategory(title, chance, entries, y);
+            if (category.stacks.isEmpty()) return y;
             categories.add(category);
             all.addAll(category.stacks);
             return y + nextRowYShift + (category.rows - 1) * itemYShift;

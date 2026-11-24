@@ -5,11 +5,13 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.WeightedRandomFishable;
@@ -51,8 +53,17 @@ public class MobHandlerFishingTest {
         FishingHooks.fish.clear();
         FishingHooks.junk.clear();
         FishingHooks.treasure.clear();
+        FishingHooks.fish.add(null);
+        FishingHooks.fish.add(new WeightedRandomFishable(null, 1));
+        FishingHooks.fish.add(new WeightedRandomFishable(new ItemStack((Item) null), 1));
         FishingHooks.junk.add(new WeightedRandomFishable(new ItemStack(Items.fishing_rod), 1).func_150709_a(0.25f));
-        FishingHooks.junk.add(new WeightedRandomFishable(new ItemStack(Items.stick), 3));
+        FishingHooks.junk.add(new WeightedRandomFishable(new ItemStack(Items.stick), 3) {
+
+            @Override
+            public ItemStack func_150708_a(Random random) {
+                return null;
+            }
+        }.func_150709_a(0.25f));
         FishingHooks.treasure.add(new WeightedRandomFishable(new ItemStack(Items.book), 1).func_150707_a());
         FishingHooks.treasure.add(new WeightedRandomFishable(new ItemStack(Items.fishing_rod), 3).func_150707_a());
     }
@@ -67,6 +78,25 @@ public class MobHandlerFishingTest {
         FishingHooks.treasure.addAll(treasure);
         forge.close();
         client.close();
+    }
+
+    @Test
+    public void malformedFishingEntriesLeaveValidLootAvailable() {
+        MobHandlerFishing handler = new MobHandlerFishing();
+        handler.loadCraftingRecipes(handler.getOverlayIdentifier());
+        List<PositionedStack> outputs = handler.getOtherStacks(0);
+        assertEquals(4, outputs.size());
+        assertSame(Items.stick, outputs.get(1).item.getItem());
+    }
+
+    @Test
+    public void missingRandomPreviewUsesTheBaseCatch() {
+        MobHandlerFishing handler = new MobHandlerFishing();
+        handler.loadCraftingRecipes(handler.getOverlayIdentifier());
+        PositionedStack preview = handler.getOtherStacks(0)
+            .get(1);
+        preview.setPermutationToRender(0);
+        assertSame(Items.stick, preview.item.getItem());
     }
 
     @Test
