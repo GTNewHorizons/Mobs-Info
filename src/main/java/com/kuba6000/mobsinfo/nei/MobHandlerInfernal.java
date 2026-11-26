@@ -43,6 +43,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
         INFERNO,
         TOOLTIP_CHANCE,
         TOOLTIP_CHANCE_ALWAYS,
+        RECIPE_NAME,
 
         ;
 
@@ -98,7 +99,7 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return "Infernal Drops";
+        return Translations.RECIPE_NAME.get();
     }
 
     @Override
@@ -192,6 +193,8 @@ public class MobHandlerInfernal extends TemplateRecipeHandler {
 
     @Override
     public void drawForeground(int recipeID) {
+        // NEI enables item lighting before invoking the foreground renderer.
+        GL11.glDisable(GL11.GL_LIGHTING);
         int y = 0, yshift = 10, x = 7;
 
         GuiDraw.drawString(Translations.TITLE.get(), x, y += yshift, ColorUtils.textDefault.getColor(), false);

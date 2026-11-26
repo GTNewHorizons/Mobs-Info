@@ -125,6 +125,7 @@ public class MobHandler extends TemplateRecipeHandler {
         SPAWNS_IN,
         SPAWNS_NOT_IN,
         WITHER_SKELETON_NAME,
+        RECIPE_NAME,
 
         ;
 
@@ -448,6 +449,8 @@ public class MobHandler extends TemplateRecipeHandler {
 
     @Override
     public void drawForeground(int recipe) {
+        // NEI enables item lighting before invoking the foreground renderer.
+        GL11.glDisable(GL11.GL_LIGHTING);
         MobCachedRecipe currentrecipe = ((MobCachedRecipe) arecipes.get(recipe));
         int y = 7, yshift = 10, x = 57;
 
@@ -604,7 +607,7 @@ public class MobHandler extends TemplateRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return "Mob Info";
+        return Translations.RECIPE_NAME.get();
     }
 
     @Override

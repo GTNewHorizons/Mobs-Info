@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -100,6 +101,12 @@ public class DraconicEvolution implements IExtraLoader {
 
     private static class DraconicEvolutionSoulChanceModifier implements IChanceModifier {
 
+        // DE's MinecraftForgeEventHandler#getDropChanceFromItem(ItemStack) is private, so it is
+        // reflectively invoked to always stay in sync with DE's own soul chance formula, mirroring
+        // the isValidEntity reflection in the outer loader.
+        private static Method getDropChanceFromItemMethod = null;
+        private static final MinecraftForgeEventHandler DE_EVENT_HANDLER = new MinecraftForgeEventHandler();
+
         double baseChance;
 
         @SuppressWarnings("unused")
@@ -151,7 +158,26 @@ public class DraconicEvolution implements IExtraLoader {
         @Override
         public double apply(double chance, @Nonnull World world, @Nonnull List<ItemStack> drops, Entity attacker,
             EntityLiving victim) {
-            return 0d; // TODO
+            if (!(attacker instanceof EntityPlayer)) return 0d;
+            ItemStack weapon = ((EntityPlayer) attacker).getHeldItem();
+            if (weapon == null) return 0d;
+            // DE souls ignore Looting entirely (they are spawned directly, bypassing loot tables),
+            // so this modifier deliberately leaves the EEC looting channel untouched as well.
+            return baseChance * getSoulChanceModifier(weapon);
+        }
+
+        private static int getSoulChanceModifier(ItemStack weapon) {
+            try {
+                if (getDropChanceFromItemMethod == null) {
+                    getDropChanceFromItemMethod = MinecraftForgeEventHandler.class
+                        .getDeclaredMethod("getDropChanceFromItem", ItemStack.class);
+                    getDropChanceFromItemMethod.setAccessible(true);
+                }
+                return (int) getDropChanceFromItemMethod.invoke(DE_EVENT_HANDLER, weapon);
+            } catch (Exception e) {
+                LOG.error("Fatal: failed to get mob soul drop chance modifier from weapon, assuming 0", e);
+                return 0;
+            }
         }
 
         @Override
